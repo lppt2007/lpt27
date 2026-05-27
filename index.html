@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Chấm Điểm Phát Âm Tiếng Anh Multi-Level</title>
+    <title>App Phát Âm Tiếng Anh - Random Challenge</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            background-color: #f0f4f8;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,124 +18,128 @@
         }
         .container {
             background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             text-align: center;
             max-width: 550px;
             width: 100%;
         }
         h1 {
-            color: #333;
+            color: #1e293b;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 26px;
         }
-        .selector-box {
-            margin-bottom: 20px;
-        }
-        select {
-            padding: 8px 12px;
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
             font-size: 14px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            width: 100%;
-            max-width: 350px;
-            outline: none;
         }
         .badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 6px 14px;
             font-size: 12px;
             font-weight: bold;
-            border-radius: 12px;
-            margin-bottom: 10px;
+            border-radius: 20px;
+            margin-bottom: 15px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .badge-easy { background-color: #d4edda; color: #155724; }
-        .badge-medium { background-color: #fff3cd; color: #856404; }
-        .badge-hard { background-color: #f8d7da; color: #721c24; }
+        .badge-easy { background-color: #e2fbd7; color: #34a853; }
+        .badge-medium { background-color: #fff8e1; color: #b78103; }
+        .badge-hard { background-color: #ffebee; color: #c62828; }
 
         .phrase-box {
-            font-size: 22px;
-            font-weight: bold;
-            color: #007bff;
-            background-color: #e7f3ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            min-height: 60px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d4ed8;
+            background-color: #eff6ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1.4;
+            border: 1px solid #dbeafe;
         }
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            min-height: 50px;
         }
         button {
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 12px 30px;
             font-size: 16px;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        #startBtn { background-color: #28a745; }
-        #startBtn:hover { background-color: #218838; }
-        #nextBtn { background-color: #007bff; }
-        #nextBtn:hover { background-color: #0069d9; }
+        #startBtn { background-color: #10b981; }
+        #startBtn:hover { background-color: #059669; transform: translateY(-1px); }
+        #nextBtn { background-color: #3b82f6; display: none; } /* Mặc định ẩn nút này */
+        #nextBtn:hover { background-color: #2563eb; transform: translateY(-1px); }
+        
         button:disabled {
-            background-color: #6c757d !important;
+            background-color: #94a3b8 !important;
             cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none;
         }
         .result-box {
-            margin-top: 25px;
+            margin-top: 30px;
             text-align: left;
-            border-top: 2px solid #eee;
-            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            padding-top: 25px;
+            animation: fadeIn 0.4s ease;
         }
         .score {
-            font-size: 32px;
-            font-weight: bold;
+            font-size: 40px;
+            font-weight: 800;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
         }
-        .good { color: #28a745; }
-        .average { color: #ffc107; }
-        .bad { color: #dc3545; }
+        .good { color: #10b981; }
+        .average { color: #f59e0b; }
+        .bad { color: #ef4444; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Phát Âm Chuẩn Mỹ</h1>
-    <p style="color: #666; margin-bottom: 20px;">Chọn câu và thử thách khả năng phát âm của bạn</p>
+    <h1>Thử Thách Phát Âm Ngẫu Nhiên</h1>
+    <div class="subtitle">Hệ thống sẽ chọn câu ngẫu nhiên. Hãy đọc thật chuẩn chỉnh nhé!</div>
     
-    <div class="selector-box">
-        <select id="phraseSelect"></select>
-    </div>
-
-    <div id="difficultyBadge" class="badge">Dễ</div>
-    <div class="phrase-box" id="targetPhrase">Đang tải câu hỏi...</div>
+    <div id="difficultyBadge" class="badge">Đang tải...</div>
+    <div class="phrase-box" id="targetPhrase">Đang chuẩn bị câu hỏi...</div>
     
     <div class="btn-group">
         <button id="startBtn">Bắt đầu nói</button>
-        <button id="nextBtn">Câu tiếp theo →</button>
+        <button id="nextBtn">Câu tiếp theo ➜</button>
     </div>
     
-    <div class="result-box" id="resultArea" style="display: none;">
-        <p><strong>Bạn đã nói:</strong> <span id="userTranscript" style="color: #555; italic;">...</span></p>
+    <div class="result-box" id="resultArea">
+        <p><strong>Bạn đã nói:</strong> <span id="userTranscript" style="color: #475569; font-style: italic;">...</span></p>
         <p><strong>Đánh giá:</strong> <span id="matchResult">...</span></p>
         <div class="score" id="finalScore">0%</div>
     </div>
 </div>
 
 <script>
-    // Danh sách 10 câu với độ khó tăng dần (Chuẩn phát âm Anh-Mỹ)
+    // Kho dữ liệu 10 câu gốc
     const dataset = [
         { text: "Hello, how are you today?", level: "easy" },
         { text: "I like to drink hot coffee in the morning.", level: "easy" },
@@ -149,12 +153,15 @@
         { text: "She sells seashells by the seashore.", level: "hard" }
     ];
 
-    let currentIndex = 0;
+    // Các biến quản lý danh sách ngẫu nhiên không trùng lặp
+    let orderList = [];
+    let currentPointer = 0;
+    let currentPhraseIndex = 0;
 
-    // Kiểm tra cấu hình trình duyệt
+    // Thiết lập Web Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng dùng Google Chrome!");
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng sử dụng Google Chrome để trải nghiệm tốt nhất!");
     } else {
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US'; 
@@ -162,7 +169,6 @@
         recognition.maxAlternatives = 1;
 
         // DOM Elements
-        const phraseSelect = document.getElementById('phraseSelect');
         const targetPhrase = document.getElementById('targetPhrase');
         const difficultyBadge = document.getElementById('difficultyBadge');
         const startBtn = document.getElementById('startBtn');
@@ -172,49 +178,36 @@
         const matchResult = document.getElementById('matchResult');
         const finalScore = document.getElementById('finalScore');
 
-        // Khởi tạo danh sách chọn (Dropdown)
-        function initApp() {
-            dataset.forEach((item, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.text = `Câu ${index + 1} [${item.level.toUpperCase()}]: ${item.text.substring(0, 30)}...`;
-                phraseSelect.appendChild(option);
-            });
-            loadPhrase(0);
+        // Hàm xáo trộn danh sách câu hỏi (Thuật toán Fisher-Yates)
+        function generateRandomOrder() {
+            orderList = [...Array(dataset.length).keys()]; // Tạo mảng [0, 1, 2...9]
+            for (let i = orderList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [orderList[i], orderList[j]] = [orderList[j], orderList[i]];
+            }
+            currentPointer = 0; // Reset con trỏ về vị trí đầu tiên của mảng đã trộn
         }
 
-        // Tải câu hỏi lên giao diện
-        function loadPhrase(index) {
-            currentIndex = index;
-            phraseSelect.value = index;
-            const item = dataset[index];
-            targetPhrase.innerText = item.text;
+        // Hàm tải câu hỏi lên giao diện
+        function loadPhrase() {
+            currentPhraseIndex = orderList[currentPointer];
+            const item = dataset[currentPhraseIndex];
             
-            // Cập nhật nhãn độ khó
+            targetPhrase.innerText = item.text;
             difficultyBadge.innerText = item.level;
             difficultyBadge.className = "badge badge-" + item.level;
             
-            // Ẩn vùng kết quả cũ khi đổi câu
+            // Dọn dẹp giao diện cho câu mới
             resultArea.style.display = "none";
+            nextBtn.style.display = "none"; // Ẩn nút "Câu tiếp theo" đi, phải hoàn thành mới hiện lại
+            startBtn.disabled = false;
         }
 
-        // Sự kiện khi thay đổi trên Dropdown
-        phraseSelect.addEventListener('change', (e) => {
-            loadPhrase(parseInt(e.target.value));
-        });
-
-        // Sự kiện nút câu tiếp theo
-        nextBtn.addEventListener('click', () => {
-            let nextIndex = (currentIndex + 1) % dataset.length;
-            loadPhrase(nextIndex);
-        });
-
-        // Sự kiện nút ghi âm
+        // Sự kiện click nút "Bắt đầu nói"
         startBtn.addEventListener('click', () => {
             recognition.start();
             startBtn.innerText = "Đang lắng nghe...";
             startBtn.disabled = true;
-            resultArea.style.display = "none";
         });
 
         // Xử lý khi có kết quả trả về từ Google API
@@ -224,30 +217,37 @@
 
             userTranscript.innerText = speechResult;
             
-            const currentTargetText = dataset[currentIndex].text;
-            const cleanTarget = cleanText(currentTargetText);
+            const cleanTarget = cleanText(dataset[currentPhraseIndex].text);
             const cleanSpeech = cleanText(speechResult);
 
-            // Tính điểm
+            // Tính điểm số
             const score = calculateScore(cleanTarget, cleanSpeech, confidence);
             displayResults(score);
         };
 
         recognition.onspeechend = () => {
             recognition.stop();
-            resetButton();
+            startBtn.innerText = "Bắt đầu nói";
         };
 
         recognition.onerror = (event) => {
-            alert("Không nhận diện được âm thanh hoặc lỗi: " + event.error);
-            resetButton();
-        };
-
-        function resetButton() {
+            alert("Không nhận diện được âm thanh hoặc lỗi thiết bị. Vui lòng thử lại!");
             startBtn.innerText = "Bắt đầu nói";
             startBtn.disabled = false;
-        }
+        };
 
+        // Sự kiện click nút "Câu tiếp theo"
+        nextBtn.addEventListener('click', () => {
+            currentPointer++;
+            // Nếu đã đi hết 10 câu, tự động trộn lại bộ câu hỏi mới từ đầu
+            if (currentPointer >= dataset.length) {
+                alert("Chúc mừng! Bạn đã hoàn thành hết bộ câu hỏi. Hệ thống sẽ xáo trộn lượt mới!");
+                generateRandomOrder();
+            }
+            loadPhrase();
+        });
+
+        // Các hàm bổ trợ xử lý dữ liệu chữ và tính điểm
         function cleanText(text) {
             return text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
         }
@@ -258,9 +258,7 @@
             
             let matchedCount = 0;
             targetWords.forEach(word => {
-                if (speechWords.includes(word)) {
-                    matchedCount++;
-                }
+                if (speechWords.includes(word)) matchedCount++;
             });
 
             const wordMatchRatio = matchedCount / targetWords.length;
@@ -277,18 +275,23 @@
 
             if (score >= 85) {
                 finalScore.classList.add('good');
-                matchResult.innerText = "Xuất sắc! Phát âm rất chuẩn giọng Mỹ.";
+                matchResult.innerText = "Xuất sắc! Phát âm cực chuẩn giọng Mỹ.";
             } else if (score >= 60) {
                 finalScore.classList.add('average');
-                matchResult.innerText = "Tạm ổn, bạn cần chú ý nối âm và bật âm đuôi rõ hơn.";
+                matchResult.innerText = "Tạm ổn, cần chú ý thêm trọng âm và âm cuối.";
             } else {
                 finalScore.classList.add('bad');
-                matchResult.innerText = "Chưa chính xác. Hãy nghe kỹ lại cấu trúc từ câu gốc và thử lại.";
+                matchResult.innerText = "Chưa đạt yêu cầu. Bạn nên đọc chậm và rõ ràng hơn.";
             }
+
+            // [TÍNH NĂNG THÊM VÀO]: Hiện nút "Câu tiếp theo" sau khi đã có điểm số
+            nextBtn.style.display = "inline-block";
+            startBtn.disabled = true; // Khóa nút nói lại của câu cũ để hướng người dùng bấm tiếp tục
         }
 
-        // Chạy khởi tạo ứng dụng
-        initApp();
+        // Khởi động ứng dụng lần đầu
+        generateRandomOrder();
+        loadPhrase();
     }
 </script>
 
