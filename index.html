@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Chấm Điểm Phát Âm Tiếng Anh (US)</title>
+    <title>App Chấm Điểm Phát Âm Tiếng Anh Multi-Level</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,8 +11,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .container {
             background-color: white;
@@ -20,44 +22,84 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
         }
         h1 {
             color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .selector-box {
             margin-bottom: 20px;
         }
+        select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 350px;
+            outline: none;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .badge-easy { background-color: #d4edda; color: #155724; }
+        .badge-medium { background-color: #fff3cd; color: #856404; }
+        .badge-hard { background-color: #f8d7da; color: #721c24; }
+
         .phrase-box {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #007bff;
             background-color: #e7f3ff;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
             margin-bottom: 20px;
         }
         button {
-            background-color: #28a745;
             color: white;
             border: none;
             padding: 12px 25px;
             font-size: 16px;
             border-radius: 25px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
         }
-        button:hover {
-            background-color: #218838;
-        }
+        #startBtn { background-color: #28a745; }
+        #startBtn:hover { background-color: #218838; }
+        #nextBtn { background-color: #007bff; }
+        #nextBtn:hover { background-color: #0069d9; }
         button:disabled {
-            background-color: #6c757d;
+            background-color: #6c757d !important;
+            cursor: not-allowed;
         }
         .result-box {
             margin-top: 25px;
             text-align: left;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
         }
         .score {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             text-align: center;
             margin-top: 10px;
@@ -71,38 +113,103 @@
 
 <div class="container">
     <h1>Phát Âm Chuẩn Mỹ</h1>
-    <p>Hãy đọc to cụm từ sau bằng giọng Anh-Mỹ (en-US):</p>
+    <p style="color: #666; margin-bottom: 20px;">Chọn câu và thử thách khả năng phát âm của bạn</p>
     
-    <div class="phrase-box" id="targetPhrase">Beautiful weather we are having today.</div>
+    <div class="selector-box">
+        <select id="phraseSelect"></select>
+    </div>
+
+    <div id="difficultyBadge" class="badge">Dễ</div>
+    <div class="phrase-box" id="targetPhrase">Đang tải câu hỏi...</div>
     
-    <button id="startBtn">Bắt đầu nói</button>
+    <div class="btn-group">
+        <button id="startBtn">Bắt đầu nói</button>
+        <button id="nextBtn">Câu tiếp theo →</button>
+    </div>
     
     <div class="result-box" id="resultArea" style="display: none;">
-        <p><strong>Bạn đã nói:</strong> <span id="userTranscript">...</span></p>
-        <p><strong>Độ chính xác từ ngữ:</strong> <span id="matchResult">...</span></p>
+        <p><strong>Bạn đã nói:</strong> <span id="userTranscript" style="color: #555; italic;">...</span></p>
+        <p><strong>Đánh giá:</strong> <span id="matchResult">...</span></p>
         <div class="score" id="finalScore">0%</div>
     </div>
 </div>
 
 <script>
-    // Kiểm tra hỗ trợ trình duyệt
+    // Danh sách 10 câu với độ khó tăng dần (Chuẩn phát âm Anh-Mỹ)
+    const dataset = [
+        { text: "Hello, how are you today?", level: "easy" },
+        { text: "I like to drink hot coffee in the morning.", level: "easy" },
+        { text: "The cat is sleeping on the comfortable mat.", level: "easy" },
+        { text: "Beautiful weather we are having today.", level: "medium" },
+        { text: "Could you please tell me the way to the train station?", level: "medium" },
+        { text: "Practice makes perfect when learning a new language.", level: "medium" },
+        { text: "I would like to schedule an appointment for next week.", level: "medium" },
+        { text: "Peter Piper picked a peck of pickled peppers.", level: "hard" },
+        { text: "The entrepreneurial strategy yielded incredible global results.", level: "hard" },
+        { text: "She sells seashells by the seashore.", level: "hard" }
+    ];
+
+    let currentIndex = 0;
+
+    // Kiểm tra cấu hình trình duyệt
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng dùng Google Chrome!");
     } else {
         const recognition = new SpeechRecognition();
-        // Cấu hình nhận diện giọng Anh - Mỹ
         recognition.lang = 'en-US'; 
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
+        // DOM Elements
+        const phraseSelect = document.getElementById('phraseSelect');
+        const targetPhrase = document.getElementById('targetPhrase');
+        const difficultyBadge = document.getElementById('difficultyBadge');
         const startBtn = document.getElementById('startBtn');
-        const targetPhrase = document.getElementById('targetPhrase').innerText;
+        const nextBtn = document.getElementById('nextBtn');
         const resultArea = document.getElementById('resultArea');
         const userTranscript = document.getElementById('userTranscript');
         const matchResult = document.getElementById('matchResult');
         const finalScore = document.getElementById('finalScore');
 
+        // Khởi tạo danh sách chọn (Dropdown)
+        function initApp() {
+            dataset.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.text = `Câu ${index + 1} [${item.level.toUpperCase()}]: ${item.text.substring(0, 30)}...`;
+                phraseSelect.appendChild(option);
+            });
+            loadPhrase(0);
+        }
+
+        // Tải câu hỏi lên giao diện
+        function loadPhrase(index) {
+            currentIndex = index;
+            phraseSelect.value = index;
+            const item = dataset[index];
+            targetPhrase.innerText = item.text;
+            
+            // Cập nhật nhãn độ khó
+            difficultyBadge.innerText = item.level;
+            difficultyBadge.className = "badge badge-" + item.level;
+            
+            // Ẩn vùng kết quả cũ khi đổi câu
+            resultArea.style.display = "none";
+        }
+
+        // Sự kiện khi thay đổi trên Dropdown
+        phraseSelect.addEventListener('change', (e) => {
+            loadPhrase(parseInt(e.target.value));
+        });
+
+        // Sự kiện nút câu tiếp theo
+        nextBtn.addEventListener('click', () => {
+            let nextIndex = (currentIndex + 1) % dataset.length;
+            loadPhrase(nextIndex);
+        });
+
+        // Sự kiện nút ghi âm
         startBtn.addEventListener('click', () => {
             recognition.start();
             startBtn.innerText = "Đang lắng nghe...";
@@ -110,21 +217,20 @@
             resultArea.style.display = "none";
         });
 
+        // Xử lý khi có kết quả trả về từ Google API
         recognition.onresult = (event) => {
             const speechResult = event.results[0][0].transcript;
-            const confidence = event.results[0][0].confidence; // Độ tự tin của AI (0 đến 1)
+            const confidence = event.results[0][0].confidence; 
 
             userTranscript.innerText = speechResult;
             
-            // Xử lý chuỗi để so sánh (bỏ dấu câu, viết thường)
-            const cleanTarget = cleanText(targetPhrase);
+            const currentTargetText = dataset[currentIndex].text;
+            const cleanTarget = cleanText(currentTargetText);
             const cleanSpeech = cleanText(speechResult);
 
-            // Tính toán điểm số dựa trên số từ khớp và độ tự tin phát âm (Confidence)
+            // Tính điểm
             const score = calculateScore(cleanTarget, cleanSpeech, confidence);
-
-            // Hiển thị kết quả
-            displayResults(score, cleanTarget, cleanSpeech);
+            displayResults(score);
         };
 
         recognition.onspeechend = () => {
@@ -133,7 +239,7 @@
         };
 
         recognition.onerror = (event) => {
-            alert("Đã xảy ra lỗi: " + event.error);
+            alert("Không nhận diện được âm thanh hoặc lỗi: " + event.error);
             resetButton();
         };
 
@@ -157,35 +263,32 @@
                 }
             });
 
-            // Tỷ lệ từ khớp đúng
             const wordMatchRatio = matchedCount / targetWords.length;
-            
-            // Điểm kết hợp giữa số từ đọc đúng và độ chuẩn xác phát âm (confidence) của Google AI
-            // Quy đổi ra thang điểm 100
             let finalScore = (wordMatchRatio * 0.6 + confidence * 0.4) * 100;
             
-            // Giới hạn nếu lệch quá nhiều
             if (speech === "") finalScore = 0;
             return Math.min(Math.max(Math.round(finalScore), 0), 100);
         }
 
-        function displayResults(score, target, speech) {
+        function displayResults(score) {
             resultArea.style.display = "block";
             finalScore.innerText = score + "%";
-
-            // Đổi màu theo mức điểm
             finalScore.className = "score"; 
-            if (score >= 80) {
+
+            if (score >= 85) {
                 finalScore.classList.add('good');
-                matchResult.innerText = "Tuyệt vời! Bạn phát âm rất chuẩn.";
-            } else if (score >= 50) {
+                matchResult.innerText = "Xuất sắc! Phát âm rất chuẩn giọng Mỹ.";
+            } else if (score >= 60) {
                 finalScore.classList.add('average');
-                matchResult.innerText = "Khá ổn, cần chú ý nhấn âm rõ hơn.";
+                matchResult.innerText = "Tạm ổn, bạn cần chú ý nối âm và bật âm đuôi rõ hơn.";
             } else {
                 finalScore.classList.add('bad');
-                matchResult.innerText = "Chưa chính xác. Hãy thử lại nhé!";
+                matchResult.innerText = "Chưa chính xác. Hãy nghe kỹ lại cấu trúc từ câu gốc và thử lại.";
             }
         }
+
+        // Chạy khởi tạo ứng dụng
+        initApp();
     }
 </script>
 
