@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Chấm Điểm Phát Âm Tiếng Anh (US)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .phrase-box {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #6c757d;
+        }
+        .result-box {
+            margin-top: 25px;
+            text-align: left;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .good { color: #28a745; }
+        .average { color: #ffc107; }
+        .bad { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Phát Âm Chuẩn Mỹ</h1>
+    <p>Hãy đọc to cụm từ sau bằng giọng Anh-Mỹ (en-US):</p>
+    
+    <div class="phrase-box" id="targetPhrase">Beautiful weather we are having today.</div>
+    
+    <button id="startBtn">Bắt đầu nói</button>
+    
+    <div class="result-box" id="resultArea" style="display: none;">
+        <p><strong>Bạn đã nói:</strong> <span id="userTranscript">...</span></p>
+        <p><strong>Độ chính xác từ ngữ:</strong> <span id="matchResult">...</span></p>
+        <div class="score" id="finalScore">0%</div>
+    </div>
+</div>
+
+<script>
+    // Kiểm tra hỗ trợ trình duyệt
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng dùng Google Chrome!");
+    } else {
+        const recognition = new SpeechRecognition();
+        // Cấu hình nhận diện giọng Anh - Mỹ
+        recognition.lang = 'en-US'; 
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const startBtn = document.getElementById('startBtn');
+        const targetPhrase = document.getElementById('targetPhrase').innerText;
+        const resultArea = document.getElementById('resultArea');
+        const userTranscript = document.getElementById('userTranscript');
+        const matchResult = document.getElementById('matchResult');
+        const finalScore = document.getElementById('finalScore');
+
+        startBtn.addEventListener('click', () => {
+            recognition.start();
+            startBtn.innerText = "Đang lắng nghe...";
+            startBtn.disabled = true;
+            resultArea.style.display = "none";
+        });
+
+        recognition.onresult = (event) => {
+            const speechResult = event.results[0][0].transcript;
+            const confidence = event.results[0][0].confidence; // Độ tự tin của AI (0 đến 1)
+
+            userTranscript.innerText = speechResult;
+            
+            // Xử lý chuỗi để so sánh (bỏ dấu câu, viết thường)
+            const cleanTarget = cleanText(targetPhrase);
+            const cleanSpeech = cleanText(speechResult);
+
+            // Tính toán điểm số dựa trên số từ khớp và độ tự tin phát âm (Confidence)
+            const score = calculateScore(cleanTarget, cleanSpeech, confidence);
+
+            // Hiển thị kết quả
+            displayResults(score, cleanTarget, cleanSpeech);
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+            resetButton();
+        };
+
+        recognition.onerror = (event) => {
+            alert("Đã xảy ra lỗi: " + event.error);
+            resetButton();
+        };
+
+        function resetButton() {
+            startBtn.innerText = "Bắt đầu nói";
+            startBtn.disabled = false;
+        }
+
+        function cleanText(text) {
+            return text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+        }
+
+        function calculateScore(target, speech, confidence) {
+            const targetWords = target.split(' ');
+            const speechWords = speech.split(' ');
+            
+            let matchedCount = 0;
+            targetWords.forEach(word => {
+                if (speechWords.includes(word)) {
+                    matchedCount++;
+                }
+            });
+
+            // Tỷ lệ từ khớp đúng
+            const wordMatchRatio = matchedCount / targetWords.length;
+            
+            // Điểm kết hợp giữa số từ đọc đúng và độ chuẩn xác phát âm (confidence) của Google AI
+            // Quy đổi ra thang điểm 100
+            let finalScore = (wordMatchRatio * 0.6 + confidence * 0.4) * 100;
+            
+            // Giới hạn nếu lệch quá nhiều
+            if (speech === "") finalScore = 0;
+            return Math.min(Math.max(Math.round(finalScore), 0), 100);
+        }
+
+        function displayResults(score, target, speech) {
+            resultArea.style.display = "block";
+            finalScore.innerText = score + "%";
+
+            // Đổi màu theo mức điểm
+            finalScore.className = "score"; 
+            if (score >= 80) {
+                finalScore.classList.add('good');
+                matchResult.innerText = "Tuyệt vời! Bạn phát âm rất chuẩn.";
+            } else if (score >= 50) {
+                finalScore.classList.add('average');
+                matchResult.innerText = "Khá ổn, cần chú ý nhấn âm rõ hơn.";
+            } else {
+                finalScore.classList.add('bad');
+                matchResult.innerText = "Chưa chính xác. Hãy thử lại nhé!";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
