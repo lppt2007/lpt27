@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Phát Âm Tiếng Anh - Random Challenge</title>
+    <title>App Phát Âm Tiếng Anh - Premium Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.4);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,116 +27,217 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
         .container {
-            background-color: white;
-            padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
             text-align: center;
             max-width: 550px;
             width: 100%;
+            transition: all 0.3s ease;
         }
+
         h1 {
             color: #1e293b;
             margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 26px;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
+
         .subtitle {
             color: #64748b;
             margin-bottom: 30px;
             font-size: 14px;
         }
+
+        /* Badge độ khó cao cấp */
         .badge {
             display: inline-block;
-            padding: 6px 14px;
+            padding: 6px 16px;
             font-size: 12px;
-            font-weight: bold;
-            border-radius: 20px;
+            font-weight: 600;
+            border-radius: 30px;
             margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .badge-easy { background-color: #e2fbd7; color: #34a853; }
-        .badge-medium { background-color: #fff8e1; color: #b78103; }
-        .badge-hard { background-color: #ffebee; color: #c62828; }
+        .badge-easy { background-color: #e2fbd7; color: #10b981; }
+        .badge-medium { background-color: #fff8e1; color: #f59e0b; }
+        .badge-hard { background-color: #ffebee; color: #ef4444; }
 
+        /* Khung hiển thị câu nói */
         .phrase-box {
             font-size: 24px;
             font-weight: 600;
-            color: #1d4ed8;
-            background-color: #eff6ff;
-            padding: 25px;
-            border-radius: 12px;
+            color: #312e81;
+            background: #f8fafc;
+            padding: 30px 25px;
+            border-radius: 16px;
             margin-bottom: 25px;
-            min-height: 70px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            line-height: 1.4;
-            border: 1px solid #dbeafe;
+            line-height: 1.5;
+            border: 2px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
         }
+
         .btn-group {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 15px;
-            justify-content: center;
             margin-bottom: 10px;
-            min-height: 50px;
         }
+
+        /* Thiết kế nút bấm chuyển động */
         button {
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 14px 40px;
             font-size: 16px;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 600;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
-        #startBtn { background-color: #10b981; }
-        #startBtn:hover { background-color: #059669; transform: translateY(-1px); }
-        #nextBtn { background-color: #3b82f6; display: none; } /* Mặc định ẩn nút này */
-        #nextBtn:hover { background-color: #2563eb; transform: translateY(-1px); }
-        
+
+        #startBtn { 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+            position: relative;
+        }
+        #startBtn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px var(--success-glow);
+        }
+        #startBtn:active { transform: translateY(-1px); }
+
+        /* Hiệu ứng Radar Sóng Quét khi đang ghi âm */
+        #startBtn.listening {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        }
+
+        #nextBtn { 
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); 
+            display: none; 
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        #nextBtn:hover { 
+            background: linear-gradient(135deg, #4338ca 0%, #2e2685 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+        }
+
         button:disabled {
-            background-color: #94a3b8 !important;
+            background: #cbd5e1 !important;
+            color: #94a3b8 !important;
             cursor: not-allowed;
             transform: none !important;
-            box-shadow: none;
+            box-shadow: none !important;
         }
+
+        /* Hiệu ứng Sóng âm giả lập (Audio Wave) */
+        .wave-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 30px;
+            margin-bottom: 20px;
+        }
+        .wave-bar {
+            width: 4px;
+            height: 10px;
+            background-color: var(--danger);
+            border-radius: 4px;
+            animation: bounce 0.8s ease-in-out infinite alternate;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 20px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; height: 25px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.1s; height: 15px; }
+        .wave-bar:nth-child(5) { animation-delay: 0.3s; height: 20px; }
+
+        /* Khung kết quả mượt mà */
         .result-box {
             margin-top: 30px;
             text-align: left;
             border-top: 2px dashed #e2e8f0;
             padding-top: 25px;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.5s ease forwards;
+            display: none;
         }
+
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
         .score {
-            font-size: 40px;
+            font-size: 56px;
             font-weight: 800;
-            text-align: center;
-            margin-top: 15px;
+            line-height: 1;
+            margin-bottom: 5px;
+            transition: all 0.5s ease;
         }
-        .good { color: #10b981; }
-        .average { color: #f59e0b; }
-        .bad { color: #ef4444; }
+
+        /* Phát quang màu điểm số */
+        .good { color: var(--success); text-shadow: 0 0 20px var(--success-glow); }
+        .average { color: var(--warning); text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        .bad { color: var(--danger); text-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+
+        /* Các hiệu ứng Animation chính */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 18px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        @keyframes bounce {
+            100% { height: 30px; }
+        }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Thử Thách Phát Âm Ngẫu Nhiên</h1>
-    <div class="subtitle">Hệ thống sẽ chọn câu ngẫu nhiên. Hãy đọc thật chuẩn chỉnh nhé!</div>
+    <h1>Phát Âm Ngẫu Nhiên</h1>
+    <div class="subtitle">Thử thách cơ miệng với AI nhận diện giọng Anh-Mỹ</div>
     
     <div id="difficultyBadge" class="badge">Đang tải...</div>
     <div class="phrase-box" id="targetPhrase">Đang chuẩn bị câu hỏi...</div>
     
+    <div class="wave-container" id="waveVisualizer">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+    </div>
+
     <div class="btn-group">
         <button id="startBtn">Bắt đầu nói</button>
         <button id="nextBtn">Câu tiếp theo ➜</button>
@@ -133,13 +245,14 @@
     
     <div class="result-box" id="resultArea">
         <p><strong>Bạn đã nói:</strong> <span id="userTranscript" style="color: #475569; font-style: italic;">...</span></p>
-        <p><strong>Đánh giá:</strong> <span id="matchResult">...</span></p>
-        <div class="score" id="finalScore">0%</div>
+        <p><strong>Đánh giá:</strong> <span id="matchResult" style="font-weight: 500; color: #334155;">...</span></p>
+        <div class="score-container">
+            <div class="score" id="finalScore">0%</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Kho dữ liệu 10 câu gốc
     const dataset = [
         { text: "Hello, how are you today?", level: "easy" },
         { text: "I like to drink hot coffee in the morning.", level: "easy" },
@@ -153,22 +266,19 @@
         { text: "She sells seashells by the seashore.", level: "hard" }
     ];
 
-    // Các biến quản lý danh sách ngẫu nhiên không trùng lặp
     let orderList = [];
     let currentPointer = 0;
     let currentPhraseIndex = 0;
 
-    // Thiết lập Web Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng sử dụng Google Chrome để trải nghiệm tốt nhất!");
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng sử dụng Google Chrome!");
     } else {
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US'; 
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
-        // DOM Elements
         const targetPhrase = document.getElementById('targetPhrase');
         const difficultyBadge = document.getElementById('difficultyBadge');
         const startBtn = document.getElementById('startBtn');
@@ -177,18 +287,17 @@
         const userTranscript = document.getElementById('userTranscript');
         const matchResult = document.getElementById('matchResult');
         const finalScore = document.getElementById('finalScore');
+        const waveVisualizer = document.getElementById('waveVisualizer');
 
-        // Hàm xáo trộn danh sách câu hỏi (Thuật toán Fisher-Yates)
         function generateRandomOrder() {
-            orderList = [...Array(dataset.length).keys()]; // Tạo mảng [0, 1, 2...9]
+            orderList = [...Array(dataset.length).keys()];
             for (let i = orderList.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [orderList[i], orderList[j]] = [orderList[j], orderList[i]];
             }
-            currentPointer = 0; // Reset con trỏ về vị trí đầu tiên của mảng đã trộn
+            currentPointer = 0;
         }
 
-        // Hàm tải câu hỏi lên giao diện
         function loadPhrase() {
             currentPhraseIndex = orderList[currentPointer];
             const item = dataset[currentPhraseIndex];
@@ -197,20 +306,21 @@
             difficultyBadge.innerText = item.level;
             difficultyBadge.className = "badge badge-" + item.level;
             
-            // Dọn dẹp giao diện cho câu mới
             resultArea.style.display = "none";
-            nextBtn.style.display = "none"; // Ẩn nút "Câu tiếp theo" đi, phải hoàn thành mới hiện lại
+            nextBtn.style.display = "none";
+            waveVisualizer.style.display = "none";
             startBtn.disabled = false;
+            startBtn.className = ""; // Xóa class phụ nếu có
         }
 
-        // Sự kiện click nút "Bắt đầu nói"
         startBtn.addEventListener('click', () => {
             recognition.start();
-            startBtn.innerText = "Đang lắng nghe...";
-            startBtn.disabled = true;
+            startBtn.innerText = "Hệ thống đang nghe...";
+            startBtn.classList.add('listening'); // Kích hoạt hiệu ứng Radar đỏ phát sáng
+            waveVisualizer.style.display = "flex"; // Hiện sóng âm nhấp nhô
+            resultArea.style.display = "none";
         });
 
-        // Xử lý khi có kết quả trả về từ Google API
         recognition.onresult = (event) => {
             const speechResult = event.results[0][0].transcript;
             const confidence = event.results[0][0].confidence; 
@@ -220,7 +330,6 @@
             const cleanTarget = cleanText(dataset[currentPhraseIndex].text);
             const cleanSpeech = cleanText(speechResult);
 
-            // Tính điểm số
             const score = calculateScore(cleanTarget, cleanSpeech, confidence);
             displayResults(score);
         };
@@ -228,26 +337,27 @@
         recognition.onspeechend = () => {
             recognition.stop();
             startBtn.innerText = "Bắt đầu nói";
+            startBtn.classList.remove('listening');
+            waveVisualizer.style.display = "none";
         };
 
         recognition.onerror = (event) => {
-            alert("Không nhận diện được âm thanh hoặc lỗi thiết bị. Vui lòng thử lại!");
+            alert("Lỗi thu âm hoặc không nhận diện được âm thanh. Hãy thử lại!");
             startBtn.innerText = "Bắt đầu nói";
+            startBtn.classList.remove('listening');
+            waveVisualizer.style.display = "none";
             startBtn.disabled = false;
         };
 
-        // Sự kiện click nút "Câu tiếp theo"
         nextBtn.addEventListener('click', () => {
             currentPointer++;
-            // Nếu đã đi hết 10 câu, tự động trộn lại bộ câu hỏi mới từ đầu
             if (currentPointer >= dataset.length) {
-                alert("Chúc mừng! Bạn đã hoàn thành hết bộ câu hỏi. Hệ thống sẽ xáo trộn lượt mới!");
+                alert("🎉 Xuất sắc! Bạn đã vượt qua toàn bộ 10 câu hỏi ngẫu nhiên!");
                 generateRandomOrder();
             }
             loadPhrase();
         });
 
-        // Các hàm bổ trợ xử lý dữ liệu chữ và tính điểm
         function cleanText(text) {
             return text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
         }
@@ -275,21 +385,19 @@
 
             if (score >= 85) {
                 finalScore.classList.add('good');
-                matchResult.innerText = "Xuất sắc! Phát âm cực chuẩn giọng Mỹ.";
+                matchResult.innerText = "🥳 Tuyệt vời! Giọng đọc cực chuẩn Mỹ, tiếp tục phát huy nhé!";
             } else if (score >= 60) {
                 finalScore.classList.add('average');
-                matchResult.innerText = "Tạm ổn, cần chú ý thêm trọng âm và âm cuối.";
+                matchResult.innerText = "👍 Khá tốt, chú ý nhấn rõ âm đuôi (ending sounds) và các từ nối.";
             } else {
                 finalScore.classList.add('bad');
-                matchResult.innerText = "Chưa đạt yêu cầu. Bạn nên đọc chậm và rõ ràng hơn.";
+                matchResult.innerText = "😢 Chưa chính xác lắm. Bạn nên nghe kỹ câu mẫu, đọc chậm và rõ chữ hơn.";
             }
 
-            // [TÍNH NĂNG THÊM VÀO]: Hiện nút "Câu tiếp theo" sau khi đã có điểm số
             nextBtn.style.display = "inline-block";
-            startBtn.disabled = true; // Khóa nút nói lại của câu cũ để hướng người dùng bấm tiếp tục
+            startBtn.disabled = true; 
         }
 
-        // Khởi động ứng dụng lần đầu
         generateRandomOrder();
         loadPhrase();
     }
