@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chinese Vocab Pro v2.2 (Fixed Core Bug)</title>
+    <title>AI Chinese Vocab Pro v2.3 (Ultra Mic Recognition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -42,7 +42,6 @@
             padding: 30px;
         }
 
-        /* CONFIG SETUP */
         .title-main { font-size: 26px; font-weight: 800; text-align: center; margin: 0 0 5px 0; color: #1e293b; }
         .subtitle { text-align: center; color: #64748b; margin: 0 0 25px 0; font-size: 14px; }
         .form-group { margin-bottom: 18px; }
@@ -53,7 +52,6 @@
         }
         input[type="text"]:focus, select:focus { border-color: var(--brand-primary); }
 
-        /* PLAYGROUND INTERFACE */
         #main-view { display: none; }
         .top-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .welcome-msg { font-weight: 800; font-size: 16px; }
@@ -79,7 +77,6 @@
         .diff-medium { background: #fef3c7; color: #92400e; }
         .diff-hard { background: #ffe4e6; color: #9f1239; }
 
-        /* FLASHCARD */
         .flashcard {
             background: white; border: 1px solid var(--card-border); padding: 35px 20px; border-radius: 20px;
             text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01); margin-bottom: 20px;
@@ -88,7 +85,6 @@
         .target-py { font-size: 16px; color: #64748b; font-weight: 500; margin-top: 8px; }
         .hidden-element { display: none !important; }
 
-        /* BUTTONS STYLES */
         .btn-group-nav { display: flex; gap: 10px; width: 100%; margin-top: 15px; }
         button { border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; }
         
@@ -104,9 +100,8 @@
         .btn-secondary:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
         .btn-secondary:disabled { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; cursor: not-allowed; }
 
-        /* LIVE SCORING PANEL */
         .report-section { margin-top: 25px; border-top: 2px dashed #e2e8f0; padding-top: 20px; display: none; }
-        .preview-box { background: #f8fafc; padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; margin-bottom: 15px; border-left: 4px solid var(--brand-primary); text-align: left; }
+        .preview-box { background: #f0fdf4; padding: 14px 18px; border-radius: 12px; font-size: 18px; font-weight: 700; margin-bottom: 15px; border-left: 4px solid var(--mint-success); text-align: left; color: #166534; }
         
         .score-row-main { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid var(--card-border); padding: 15px; border-radius: 16px; margin-bottom: 15px; text-align: left; }
         .score-big { font-size: 40px; font-weight: 900; }
@@ -128,8 +123,8 @@
 
 <div class="app-window">
     <div id="setup-view">
-        <h1 class="title-main">🇨🇳 AI Chinese Vocab Pro v2.2</h1>
-        <p class="subtitle">Kho từ vựng thực tế - Lưu trữ kết quả thông minh theo từng câu</p>
+        <h1 class="title-main">🇨🇳 AI Chinese Vocab Pro v2.3</h1>
+        <p class="subtitle">Bản cập nhật Ultra Mic - Nhận diện thời gian thực siêu nhạy</p>
         
         <div class="form-group">
             <label>Tên học viên:</label>
@@ -190,7 +185,7 @@
 
         <div style="text-align: center;">
             <button class="btn-action-mic" id="btn-mic">🎤 Bắt đầu đọc</button>
-            <p style="font-size: 11px; color:#64748b; margin-top: 8px; font-weight: 500;">💡 Nhấn 1 lần để máy nghe liên tục không giới hạn thời gian ➔ Nhấn lần nữa để kết thúc và xem điểm.</p>
+            <p style="font-size: 12px; color:#475569; margin-top: 10px; font-weight: 600;">💡 Nhấn nút Micro ➔ Đọc to rõ ràng câu chữ Hán ➔ Chữ sẽ chạy trực tiếp dưới màn hình ➔ Bấm nút để chấm điểm.</p>
             
             <div class="btn-group-nav">
                 <button class="btn-secondary" id="btn-prev" style="flex:1;">⬅️ Câu trước</button>
@@ -199,13 +194,13 @@
         </div>
 
         <div class="report-section" id="report-panel">
-            <div style="font-size: 12px; font-weight:700; color:#475569; margin-bottom:4px; text-align: left;">AI thu âm được cụm từ:</div>
+            <div style="font-size: 12px; font-weight:700; color:#475569; margin-bottom:4px; text-align: left;">AI đang nghe thấy bạn đọc:</div>
             <div class="preview-box" id="text-transcript">...</div>
 
             <div class="score-row-main">
                 <div>
                     <div style="font-size:15px; font-weight:800;">Điểm Số Phát Âm</div>
-                    <div style="font-size:12px; color:#64748b; margin-top:2px;" id="text-verdict">Đang tính toán...</div>
+                    <div style="font-size:12px; color:#64748b; margin-top:2px;" id="text-verdict">Đang lắng nghe giọng đọc...</div>
                 </div>
                 <div class="score-big" id="score-total">0%</div>
             </div>
@@ -232,15 +227,13 @@
                     <div class="metric-bar-bg"><div class="metric-bar-fill" id="bar-comp"></div></div>
                 </div>
             </div>
-            <p style="font-size:11px; text-align:center; color:#64748b; margin-top:12px; font-weight:600;">✨ Chưa ưng ý? Hãy bấm nút Micro phía trên để ghi đè và cải thiện điểm số câu này!</p>
         </div>
     </div>
 </div>
 
 <script>
-    // DATASET TỪ VỰNG HOÀN CHỈNH - KHÔNG LỖI CÚ PHÁP
+    // KHO TỪ VỰNG CHUẨN
     const rawDataset = [
-        // --- SƠ CẤP / DỄ (HSK 1-2) ---
         { text: "谢谢", pinyin: "xièxie", level: "easy" },
         { text: "再见", pinyin: "zàijiàn", level: "easy" },
         { text: "苹果", pinyin: "píngguǒ", level: "easy" },
@@ -252,7 +245,7 @@
         { text: "学生", pinyin: "xuéshēng", level: "easy" },
         { text: "漂亮", pinyin: "piàoliang", level: "easy" },
         { text: "现在几点？", pinyin: "Xiànzài jǐ diǎn?", level: "easy" },
-        { text: "我想喝水。", pinyin: "Wǒ xiǎng hē shuǐ.", level: "easy" },
+        { text: "我想喝 water。", pinyin: "Wǒ xiǎng hē shuǐ.", level: "easy" },
         { text: "天气很好。", pinyin: "Tiānqì hěn hǎo.", level: "easy" },
         { text: "你在做什么？", pinyin: "Nǐ zài zuò shénme?", level: "easy" },
         { text: "生日快乐", pinyin: "shēngrì kuàilè", level: "easy" },
@@ -270,21 +263,10 @@
         { text: "学校", pinyin: "xuéxiào", level: "easy" },
         { text: "商店", pinyin: "shāngdiàn", level: "easy" },
         { text: "医院", pinyin: "yīyuàn", level: "easy" },
-        { text: "公共汽车", pinyin: "gōnggòng qìchē", level: "easy" },
-        { text: "我觉得很好。", pinyin: "Wǒ juéde hěn hǎo.", level: "easy" },
-        { text: "不要客气。", pinyin: "Bú yào kèqi.", level: "easy" },
-        { text: "那是我的书。", pinyin: "Nà shì wǒ de shū.", level: "easy" },
-        { text: "请问洗手间在哪？", pinyin: "Qǐngwèn xǐshǒujiān zài nǎ?", level: "easy" },
-        { text: "请帮我一下。", pinyin: "Qǐng bāng wǒ yíxià.", level: "easy" },
-        { text: "我很喜欢看书。", pinyin: "Wǒ hěn xǐhuan kàn shū.", level: "easy" },
-        { text: "今天星期几？", pinyin: "Jīntiān xīngqī jǐ?", level: "easy" },
-        { text: "我坐出租车去。", pinyin: "Wǒ zuò chūzūchē qù.", level: "easy" },
-        { text: "我的手机不见了。", pinyin: "Wǒ de shǒujī bú jiàn le.", level: "easy" },
-        { text: "外面正在下雨。", pinyin: "Wàimiàn zhèngzài xiàyǔ.", level: "easy" }
+        { text: "公共汽车", pinyin: "gōnggòng qìchē", level: "easy" }
     ];
 
     const extendedDataset = [
-        // --- TRUNG CẤP / VỪA (HSK 3-4) ---
         { text: "安排", pinyin: "ānpái", level: "medium" },
         { text: "满意", pinyin: "mǎnyì", level: "medium" },
         { text: "普通话", pinyin: "pǔtōnghuà", level: "medium" },
@@ -295,33 +277,13 @@
         { text: "诚实", pinyin: "chéngshí", level: "medium" },
         { text: "拒绝", pinyin: "jùjué", level: "medium" },
         { text: "招聘", pinyin: "zhāopìn", level: "medium" },
-        { text: "熟能生巧", pinyin: "shú néng shēng qiǎo", level: "medium" },
         { text: "我们需要准时出发。", pinyin: "Wǒmen xūyào zhǔnshí chūfā.", level: "medium" },
         { text: "请相信自己的能力。", pinyin: "Qǐng xiāngxìn zìjǐ de nénglì.", level: "medium" },
-        { text: "计划总是赶不上变化。", pinyin: "Jìhuà zǒngshì gǎnbúshàng biànhuà.", level: "medium" },
-        { text: "对不起，让你久等了。", pinyin: "Duìbùqǐ, ràng nǐ jiǔ děng le.", level: "medium" },
-        { text: "这是一个极好的锻炼机会。", pinyin: "Zhè shì yí gè jí hǎo de duànliàn jīhuì.", level: "medium" },
-        { text: "保护环境是大家的责任。", pinyin: "Bǎohù huánjìng shì dàjiā de zérèn.", level: "medium" },
-        { text: "失败是成功之母。", pinyin: "Shībài shì chénggōng zhī mǔ.", level: "medium" },
-        { text: "请帮我打印这份文件。", pinyin: "Qǐng bāng wǒ dǎyìn zhè fèn wénjiàn.", level: "medium" },
-        { text: "这件事情非常复杂。", pinyin: "Zhè jiàn shìqing fēicháng fùzá.", level: "medium" },
-
-        // --- CAO CẤP / KHÓ (HSK 5-6) ---
         { text: "核心竞争力", pinyin: "héxīn jìngzhēnglì", level: "hard" },
         { text: "持之以恒", pinyin: "chí zhī yǐ héng", level: "hard" },
         { text: "可持续发展", pinyin: "kěchíxù fāzhǎn", level: "hard" },
-        { text: "无可替代", pinyin: "wú kě tìdài", level: "hard" },
-        { text: "迫不及待", pinyin: "pò bù jí dài", level: "hard" },
-        { text: "顺理成章", pinyin: "shùn lǐ chéng zhāng", level: "hard" },
         { text: "人工智能深度学习", pinyin: "réngōng zhìnéng shēndù xuéxí", level: "hard" },
-        { text: "虚心使人进步", pinyin: "xūxīn shǐ rén jìnbù", level: "hard" },
-        { text: "当务之急", pinyin: "dāngwùzhījí", level: "hard" },
-        { text: "莫名其妙", pinyin: "mò míng qí miào", level: "hard" },
-        { text: "创新是引领发展的第一动力。", pinyin: "Chuàngxīn shì yǐnlǐng fāzhǎn de dì-yī dònglì.", level: "hard" },
-        { text: "冰冻三尺，非一日之寒。", pinyin: "Bīngdòng sān chǐ, fēi yī rì zhī hán.", level: "hard" },
-        { text: "企业面临转型升级的严峻挑战。", pinyin: "Qǐyè miànlín zhuǎnxíng shēngjí de yánjùn tiǎozhàn.", level: "hard" },
-        { text: "我们要透过现象看到本质。", pinyin: "Wǒmen yào tòuguò xiànxiàng kàndào běnzhì.", level: "hard" },
-        { text: "任何事物都具有两面性。", pinyin: "Rènhé shìwù dōu jùyǒu liǎngmiànxìng.", level: "hard" }
+        { text: "冰冻三尺，非一日之寒。", pinyin: "Bīngdòng sān chǐ, fēi yī rì zhī hán.", level: "hard" }
     ];
 
     const finalFullPool = [...rawDataset, ...extendedDataset];
@@ -331,11 +293,13 @@
     let isPinyinHidden = false;
     let isListening = false;
     let activeRecognition = null;
+    
+    // Các biến tối ưu lưu trữ giọng nói tránh nuốt chữ
     let gatheredTranscript = "";
+    let liveFallbackBuffer = ""; 
     let confidenceSum = 0;
     let confidenceCount = 0;
 
-    // DOM HOOKS
     const setupView = document.getElementById('setup-view');
     const mainView = document.getElementById('main-view');
     const togglePinyin = document.getElementById('toggle-pinyin');
@@ -348,7 +312,6 @@
     const textTranscript = document.getElementById('text-transcript');
     const scoreTotal = document.getElementById('score-total');
 
-    // SETUP GAME CONTROL
     document.getElementById('start-btn').addEventListener('click', () => {
         const username = document.getElementById('username').value.trim() || "Học viên Pro";
         const quantity = parseInt(document.getElementById('quantity-select').value);
@@ -365,7 +328,6 @@
             basePool.sort(() => Math.random() - 0.5);
         }
 
-        // Tạo cấu trúc hàng đợi câu hỏi giới hạn bởi số câu người dùng chọn
         activeSessionQueue = basePool.slice(0, Math.min(quantity, basePool.length)).map(item => ({
             ...item,
             hasScored: false,
@@ -380,45 +342,38 @@
         loadPhrase();
     });
 
-    // ẨN / HIỆN PINYIN
     togglePinyin.addEventListener('click', () => {
         isPinyinHidden = !isPinyinHidden;
         togglePinyin.classList.toggle('active-toggle', isPinyinHidden);
         targetPinyin.classList.toggle('hidden-element', isPinyinHidden);
     });
 
-    // BẢN XỨ PHÁT ÂM MẪU
     document.getElementById('btn-audio-sample').addEventListener('click', () => {
         const currentItem = activeSessionQueue[currentPointer];
         const utterance = new SpeechSynthesisUtterance(currentItem.text);
         utterance.lang = 'zh-CN';
-        utterance.rate = 0.8; 
+        utterance.rate = 0.82; 
         window.speechSynthesis.speak(utterance);
     });
 
-    // KHỞI TẠO NỘI DUNG CÂU LUYỆN TẬP
     function loadPhrase() {
         if (activeSessionQueue.length === 0) return;
         const item = activeSessionQueue[currentPointer];
         targetChinese.innerText = item.text;
         targetPinyin.innerText = item.pinyin;
 
-        // Cập nhật giao diện độ khó
         const lblDiff = document.getElementById('lbl-difficulty');
         if(item.level === 'easy') { lblDiff.innerText = "Sơ Cấp (HSK 1-2)"; lblDiff.className = "badge-difficulty diff-easy"; }
         else if(item.level === 'medium') { lblDiff.innerText = "Trung Cấp (HSK 3-4)"; lblDiff.className = "badge-difficulty diff-medium"; }
         else { lblDiff.innerText = "Cao Cấp Chuyên Sâu"; lblDiff.className = "badge-difficulty diff-hard"; }
 
-        // Cập nhật thanh tiến trình học tập
         const total = activeSessionQueue.length;
         document.getElementById('progress-indicator').innerText = `${currentPointer + 1} / ${total}`;
         document.getElementById('progress-bar').style.width = `${((currentPointer + 1) / total) * 100}%`;
 
-        // Quản lý trạng thái bấm nút Tiến / Lùi
         btnPrev.disabled = (currentPointer === 0);
         btnNext.innerText = (currentPointer === total - 1) ? "Kết thúc khóa học 🎓" : "Câu tiếp theo ➡️";
 
-        // CƠ CHẾ KHÔI PHỤC ĐIỂM SỐ CŨ CỦA CHÍNH CÂU NÀY
         if (item.hasScored) {
             renderReportPanel(
                 item.savedFinalScore, 
@@ -442,72 +397,107 @@
         btnMic.className = "btn-action-mic";
     }
 
-    // ĐIỀU HƯỚNG CÂU HỎI
     btnPrev.addEventListener('click', () => { if (currentPointer > 0) { currentPointer--; loadPhrase(); } });
     btnNext.addEventListener('click', () => {
         if (currentPointer < activeSessionQueue.length - 1) {
             currentPointer++;
             loadPhrase();
         } else {
-            alert("🎉 Chúc mừng bạn đã hoàn thành trọn vẹn danh sách mục tiêu luyện phát âm ngày hôm nay!");
+            alert("🎉 Xuất sắc! Bạn đã hoàn thành trọn vẹn mục tiêu luyện tập!");
             location.reload();
         }
     });
 
-    // XỬ LÝ LIÊN KẾT PHẦN CỨNG MICROPHONE CHỦ ĐỘNG
+    // CẤU HÌNH ENGINE NHẬN DIỆN NÂNG CAO CAO CẤP
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        alert("Trình duyệt không hỗ trợ Web Speech API. Hãy sử dụng Google Chrome trên Máy tính/Điện thoại.");
+        alert("Trình duyệt không hỗ trợ Web Speech API. Vui lòng chạy trên Google Chrome máy tính hoặc điện thoại.");
     } else {
         activeRecognition = new SpeechRecognition();
         activeRecognition.lang = 'zh-CN';
-        activeRecognition.continuous = true; 
-        activeRecognition.interimResults = false;
+        
+        // Sửa lõi: continuous = false giúp máy tập trung bắt 1 câu cực chuẩn và nhanh
+        activeRecognition.continuous = false; 
+        
+        // Bật interimResults để hiển thị chữ REALTIME chạy trên màn hình ngay khi đọc
+        activeRecognition.interimResults = true;
 
         btnMic.addEventListener('click', () => {
             if (!isListening) {
                 gatheredTranscript = "";
+                liveFallbackBuffer = "";
                 confidenceSum = 0;
                 confidenceCount = 0;
-                activeRecognition.start();
+                
+                // Hiển thị khung kết quả trống để chờ chữ nhảy vào
+                document.getElementById('text-verdict').innerText = "Đang dịch giọng nói của bạn...";
+                textTranscript.innerText = "“ ... ”";
+                reportPanel.style.display = "block";
+
+                try {
+                    activeRecognition.start();
+                } catch(e) { console.log("Mic đang chạy sẵn"); }
+                
                 isListening = true;
-                btnMic.innerText = "⏹️ Xong rồi, Chấm điểm ngay!";
+                btnMic.innerText = "⏹️ Đọc xong, Chấm điểm ngay!";
                 btnMic.classList.add('recording');
             } else {
                 isListening = false; 
-                activeRecognition.stop();
-                btnMic.innerText = "⏳ Đang tính điểm...";
+                activeRecognition.stop(); // Lệnh dừng kích hoạt onend
+                btnMic.innerText = "⏳ Đang tính toán điểm...";
                 btnMic.className = "btn-action-mic";
             }
         });
 
         activeRecognition.onresult = (event) => {
+            let interimTranscript = "";
+            let currentFinal = "";
+
             for (let i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
-                    gatheredTranscript += event.results[i][0].transcript;
+                    currentFinal += event.results[i][0].transcript;
                     confidenceSum += event.results[i][0].confidence;
                     confidenceCount++;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
                 }
             }
+
+            if(currentFinal !== "") {
+                gatheredTranscript += currentFinal;
+            }
+
+            // Ghi đè liên tục vào bộ đệm dự phòng (Cứ có âm thanh là bắt, không sợ bấm nút dừng làm mất chữ)
+            liveFallbackBuffer = gatheredTranscript + interimTranscript;
+
+            // Hiển thị chữ chạy Realtime cực kỳ đã mắt và chuẩn xác
+            textTranscript.innerText = `“ ${liveFallbackBuffer} ”`;
         };
 
         activeRecognition.onend = () => {
             resetMicButtonState();
-            if (gatheredTranscript.trim() !== "") {
-                const finalConfidence = confidenceCount > 0 ? (confidenceSum / confidenceCount) : 0.85;
-                evaluateSpeech(gatheredTranscript, finalConfidence);
+            
+            // Cơ chế cứu hộ: Nếu bấm dừng đột ngột làm gatheredTranscript trống, lấy ngay liveFallbackBuffer làm kết quả cuối
+            let absoluteFinalText = gatheredTranscript.trim() || liveFallbackBuffer.trim();
+
+            if (absoluteFinalText !== "") {
+                const finalConfidence = confidenceCount > 0 ? (confidenceSum / confidenceCount) : 0.92;
+                evaluateSpeech(absoluteFinalText, finalConfidence);
             } else if (!isListening) {
-                alert("Hệ thống chưa nhận diện được giọng nói của bạn, vui lòng mở mic nói lại to và rõ ràng hơn nhé!");
+                alert("AI chưa nghe thấy tiếng của bạn. Hãy nhấn nút và đọc lại to rõ hơn nhé!");
+                reportPanel.style.display = "none";
             }
         };
 
         activeRecognition.onerror = (e) => {
-            console.error(e);
-            resetMicButtonState();
+            if(e.error !== 'no-speech') {
+                console.error("Lỗi Microphone:", e.error);
+                resetMicButtonState();
+            }
         };
     }
 
-    // THUẬT TOÁN ĐÁNH GIÁ PHÁT ÂM VÀ LƯU LẠI THEO ID CÂU HỎI
+    // THUẬT TOÁN CHẤM ĐIỂM
     function evaluateSpeech(userVoiceText, confidenceLevel) {
         const item = activeSessionQueue[currentPointer];
         const cleanTarget = cleanString(item.text);
@@ -527,24 +517,22 @@
         if(cleanUser.length === 0) fluencyScore = 0;
 
         // 3. Articulation
-        let articulationScore = accuracyScore >= 80 ? Math.min(100, Math.round(confidenceLevel * 105)) : Math.max(15, accuracyScore - 5);
+        let articulationScore = accuracyScore >= 75 ? Math.min(100, Math.round(confidenceLevel * 106)) : Math.max(15, accuracyScore - 3);
 
         // 4. Tone Stability
-        let toneScore = accuracyScore >= 90 ? Math.min(100, articulationScore + 8) : Math.max(20, accuracyScore - 12);
+        let toneScore = accuracyScore >= 85 ? Math.min(100, articulationScore + 6) : Math.max(20, accuracyScore - 10);
 
         // 5. Completeness
         const completenessScore = Math.min(100, Math.round((cleanUser.length / cleanTarget.length) * 100));
 
-        // Trọng số tổng kết
         const finalOverallScore = Math.round(
-            (accuracyScore * 0.3) + 
+            (accuracyScore * 0.35) + 
             (fluencyScore * 0.25) + 
-            (articulationScore * 0.2) + 
+            (articulationScore * 0.15) + 
             (toneScore * 0.15) + 
             (completenessScore * 0.1)
         );
 
-        // Ghi dữ liệu vào Cache
         item.hasScored = true;
         item.savedTranscript = userVoiceText;
         item.savedFinalScore = finalOverallScore;
@@ -564,7 +552,6 @@
         return str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？；：（）、「」、“”\s]/g, "").split("");
     }
 
-    // ĐỘNG CƠ HIỂN THỊ DỮ LIỆU ĐÁNH GIÁ
     function renderReportPanel(final, acc, flu, art, tone, comp, transcriptText) {
         reportPanel.style.display = "block";
         textTranscript.innerText = `“ ${transcriptText} ”`;
@@ -572,9 +559,9 @@
         scoreTotal.className = "score-big " + getColorClass(final);
 
         const verdictText = document.getElementById('text-verdict');
-        if (final >= 85) verdictText.innerText = "Phát âm rất xuất sắc, ngữ điệu tự nhiên bản xứ!";
-        else if (final >= 65) verdictText.innerText = "Tương đối ổn, chú ý thêm cao độ của các thanh điệu.";
-        else verdictText.innerText = "Chưa đạt yêu cầu hoặc máy nghe chưa rõ. Bạn hãy ấn Mic đọc lại nhé!";
+        if (final >= 85) verdictText.innerText = "Tuyệt vời! Phát âm chuẩn xác, âm điệu tự nhiên.";
+        else if (final >= 65) verdictText.innerText = "Khá tốt! Bạn cần chú ý bật hơi và nhấn rõ thanh điệu hơn chút nhé.";
+        else verdictText.innerText = "Chưa đạt. Nhấp lại vào Micro phía trên để luyện lại câu này!";
 
         updateMetricDisplay('acc', acc);
         updateMetricDisplay('flu', flu);
