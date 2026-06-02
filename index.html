@@ -3,380 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI English Pronunciation Coach - Elite Edition</title>
+    <title>AI Chinese Pronunciation Coach Pro - Spark Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.3);
-            --success: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.3);
-            --warning: #f59e0b;
-            --danger: #f43f5e;
-            --danger-glow: rgba(244, 63, 94, 0.4);
-            --text-main: #0f172a;
-            --text-sub: #64748b;
+            --brand-primary: #ca8a04; /* Đổi sang tone màu vàng/cam năng động hợp với tiếng Trung */
+            --brand-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --mint-success: #10b981;
+            --amber-warning: #f59e0b;
+            --rose-danger: #f43f5e;
+            --dark-surface: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(15, 23, 42, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
 
         body {
-            background: #0b0f19;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #f8fafc;
+            color: var(--dark-surface);
             min-height: 100vh;
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            position: relative;
+            background-image: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
         }
 
-        /* Tạo các bóng màu Gradient chuyển động dưới nền (Aura Mesh) */
-        body::before, body::after {
-            content: "";
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #4f46e5, #ec4899);
-            filter: blur(140px);
-            opacity: 0.35;
-            z-index: 0;
-            animation: floatBackground 12s infinite alternate ease-in-out;
-        }
-        body::after {
-            background: linear-gradient(45deg, #06b6d4, #3b82f6);
-            top: auto; bottom: -100px; right: -100px;
-            animation-delay: -6s;
-        }
-        body::before { top: -100px; left: -100px; }
-
-        @keyframes floatBackground {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(80px, 50px) scale(1.2); }
-        }
-
-        /* Khung kính mờ Glassmorphism siêu VIP */
-        .container {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .app-window {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 640px;
             padding: 40px;
-            border-radius: 32px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.5);
-            text-align: center;
-            max-width: 580px;
-            width: 100%;
-            z-index: 1;
             position: relative;
-        }
-
-        h1 {
-            color: var(--text-main);
-            margin: 0 0 6px 0;
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            color: var(--text-sub);
-            margin-bottom: 25px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* Thanh tiến trình thông minh (Progress Bar) */
-        .progress-container {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.06);
-            height: 8px;
-            border-radius: 10px;
-            margin-bottom: 25px;
             overflow: hidden;
-            position: relative;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 10%;
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            border-radius: 10px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .progress-text {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            display: block;
-            text-align: right;
         }
 
-        /* Badge độ khó thiết kế gọn gàng, tinh tế */
-        .badge {
-            display: inline-block;
-            padding: 6px 16px;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 100px;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* 1. MÀN HÌNH ONBOARDING (CÁ NHÂN HÓA) */
+        #onboarding-view { text-align: center; }
+        .logo-icon { font-size: 50px; margin-bottom: 10px; animation: bounce 2s infinite; }
+        .input-group { margin: 25px 0; text-align: left; }
+        label { font-size: 14px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px; }
+        input[type="text"], select {
+            width: 100%; padding: 14px 20px; border-radius: 16px; border: 2px solid #e2e8f0;
+            font-size: 16px; font-weight: 600; outline: none; background: white;
         }
-        .badge-easy { background: #d1fae5; color: #065f46; }
-        .badge-medium { background: #fef3c7; color: #92400e; }
-        .badge-hard { background: #ffe4e6; color: #9f1239; }
+        input[type="text"]:focus, select:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
 
-        /* Khung hiển thị câu mẫu */
-        .phrase-box {
-            font-size: 25px;
-            font-weight: 700;
-            color: #1e1b4b;
-            background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(248,250,252,0.8) 100%);
-            padding: 35px 25px;
-            border-radius: 24px;
-            margin-bottom: 30px;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.45;
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
-        }
+        /* 2. MÀN HÌNH CHÍNH */
+        #main-view { display: none; }
+        .header-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .user-welcome { font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .streak-badge { background: #ffedd5; color: #ea580c; padding: 6px 14px; border-radius: 100px; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+        
+        .tracker-info { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; }
+        .progress-track { width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 30px; }
+        .progress-fill { height: 100%; width: 0%; background: var(--brand-gradient); border-radius: 10px; }
 
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            min-height: 55px;
-            margin-bottom: 10px;
+        .level-badge { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .lvl-easy { background: #d1fae5; color: #065f46; }
+        .lvl-medium { background: #fef3c7; color: #92400e; }
+        .lvl-hard { background: #ffe4e6; color: #9f1239; }
+        
+        .phrase-display-card {
+            background: white; border: 1px solid var(--card-border); padding: 30px 24px; border-radius: 24px;
+            color: #1e293b; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+            text-align: center;
         }
 
-        /* Nút bấm hiệu ứng 3D nhẹ & Glow phát sáng sâu */
-        button {
-            color: white;
-            border: none;
-            padding: 14px 45px;
-            font-size: 16px;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* Nút tương tác */
+        .action-zone { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        button.btn-primary {
+            background: var(--brand-gradient); color: white; border: none; padding: 16px 40px;
+            font-size: 16px; font-weight: 700; border-radius: 100px; cursor: pointer; width: 100%;
+            box-shadow: 0 10px 20px rgba(217, 119, 6, 0.25); display: flex; justify-content: center; align-items: center; gap: 8px;
         }
+        button.btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(217, 119, 6, 0.4); }
+        button.listening-mode { background: linear-gradient(135deg, var(--rose-danger) 0%, #e11d48 100%) !important; animation: pulseRadar 1.5s infinite; }
+        
+        button.btn-secondary {
+            background: #0f172a; color: white; border: none; padding: 14px 35px; font-size: 15px;
+            font-weight: 700; border-radius: 100px; cursor: pointer; display: none; width: 100%;
+        }
+        button.btn-secondary:hover { background: #1e293b; }
+        button:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
 
-        #startBtn { 
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            box-shadow: 0 10px 25px var(--primary-glow);
-        }
-        #startBtn:hover:not(:disabled) { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.5);
-        }
-        #startBtn:active:not(:disabled) { transform: translateY(-1px); }
+        /* Sóng âm */
+        .audio-wave { display: none; gap: 5px; height: 30px; align-items: center; margin-bottom: 15px; }
+        .wave-pillar { width: 4px; height: 10px; background: var(--rose-danger); border-radius: 50px; animation: waveMovement 0.6s ease-in-out infinite alternate; }
+        .wave-pillar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-pillar:nth-child(3) { animation-delay: 0.25s; }
+        .wave-pillar:nth-child(4) { animation-delay: 0.15s; }
+        .wave-pillar:nth-child(5) { animation-delay: 0.3s; }
 
-        /* Hiệu ứng xung sóng Neon đỏ rực khi đang thu âm */
-        #startBtn.listening {
-            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
-            animation: radarPulse 1.4s infinite;
-            box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
+        /* 3. KHU VỰC BÁO CÁO KẾT QUẢ ĐA TIÊU CHÍ */
+        .result-panel { margin-top: 35px; border-top: 2px dashed #e2e8f0; padding-top: 30px; display: none; animation: slideUp 0.4s ease; }
+        .user-speech-preview { background: rgba(15,23,42,0.03); padding: 14px 20px; border-radius: 16px; font-style: italic; color: #475569; margin-bottom: 25px; border-left: 4px solid var(--brand-primary); font-size: 18px; }
+        
+        .score-grand-card {
+            background: white; border: 1px solid var(--card-border); border-radius: 24px; padding: 25px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;
         }
+        .grand-title { font-size: 18px; font-weight: 800; color: #1e293b; margin: 0; }
+        .grand-desc { font-size: 13px; color: #64748b; margin-top: 2px; font-weight: 500; }
+        .grand-score-number { font-size: 54px; font-weight: 900; letter-spacing: -2px; }
 
-        #nextBtn { 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
-            display: none; 
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        #nextBtn:hover { 
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.4);
-        }
+        .criteria-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .criterion-card { background: white; border: 1px solid var(--card-border); padding: 18px; border-radius: 20px; }
+        .criterion-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+        .criterion-bar-bg { width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; margin-bottom: 8px; }
+        .criterion-bar-fill { height: 100%; width: 0%; border-radius: 10px; }
+        .criterion-feedback { font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.4; }
 
-        button:disabled {
-            background: #cbd5e1 !important;
-            color: #94a3b8 !important;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
+        .status-good { color: var(--mint-success) !important; }
+        .status-average { color: var(--amber-warning) !important; }
+        .status-bad { color: var(--rose-danger) !important; }
+        .bg-good { background: var(--mint-success); }
+        .bg-average { background: var(--amber-warning); }
+        .bg-bad { background: var(--rose-danger); }
 
-        /* Visualizer Sóng âm thanh Neon mượt mà */
-        .wave-container {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            height: 35px;
-            margin-bottom: 25px;
-        }
-        .wave-bar {
-            width: 5px;
-            height: 8px;
-            background: linear-gradient(to top, #f43f5e, #ec4899);
-            border-radius: 10px;
-            animation: neonBounce 0.6s ease-in-out infinite alternate;
-        }
-        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
-        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
-        .wave-bar:nth-child(4) { animation-delay: 0.45s; }
-        .wave-bar:nth-child(5) { animation-delay: 0.2s; }
-
-        /* Khung kết quả hiển thị học thuật */
-        .result-box {
-            margin-top: 35px;
-            text-align: left;
-            border-top: 2px dashed rgba(15, 23, 42, 0.08);
-            padding-top: 30px;
-            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            display: none;
-        }
-
-        .score-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid rgba(15, 23, 42, 0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            margin-top: 20px;
-        }
-
-        .score-text-area { max-width: 65%; }
-
-        .score {
-            font-size: 52px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            line-height: 1;
-            transition: all 0.5s ease;
-        }
-
-        /* Màu điểm kèm hiệu ứng phát quang đặc trưng */
-        .good { color: var(--success); text-shadow: 0 0 25px var(--success-glow); }
-        .average { color: var(--warning); text-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
-        .bad { color: var(--danger); text-shadow: 0 0 25px var(--danger-glow); }
-
-        /* Keyframes Animations */
-        @keyframes radarPulse {
-            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
-        }
-
-        @keyframes neonBounce {
-            0% { height: 8px; }
-            100% { height: 35px; }
-        }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.85) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes pulseRadar { 0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.6); } 70% { box-shadow: 0 0 0 15px rgba(244,63,94,0); } 100% { box-shadow: 0 0 0 0 rgba(244,63,94,0); } }
+        @keyframes waveMovement { 0% { height: 8px; } 100% { height: 30px; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <span class="progress-text" id="progressText">Câu 1 / 10</span>
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <h1>AI Pronunciation Coach</h1>
-    <div class="subtitle">Phát âm chuẩn giọng Anh-Mỹ (General American)</div>
-    
-    <div id="difficultyBadge" class="badge">Đang tải...</div>
-    <div class="phrase-box" id="targetPhrase">Đang chuẩn bị dữ liệu...</div>
-    
-    <div class="wave-container" id="waveVisualizer">
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-    </div>
-
-    <div class="btn-group">
-        <button id="startBtn">🎤 Bắt đầu nói</button>
-        <button id="nextBtn">Câu tiếp theo ➜</button>
-    </div>
-    
-    <div class="result-box" id="resultArea">
-        <p style="margin: 0 0 8px 0;"><strong style="color: var(--text-main)">Bạn đã nói:</strong></p>
-        <div style="background: rgba(15,23,42,0.04); padding: 12px 16px; border-radius: 12px; font-style: italic; color: #334155; margin-bottom: 15px;" id="userTranscript">...</div>
+<div class="app-window">
+    <div id="onboarding-view">
+        <div class="logo-icon">🇨🇳</div>
+        <h1 style="font-size: 26px; font-weight: 800; margin: 0 0 5px 0;">AI Chinese Coach</h1>
+        <p style="color: #64748b; margin: 0 0 25px 0; font-size: 14px; font-weight: 500;">Học phát âm Tiếng Trung (Mandarin - 普通话) chuẩn cá nhân hóa</p>
         
-        <div class="score-card">
-            <div class="score-text-area">
-                <strong style="color: var(--text-main); display: block; margin-bottom: 4px;">Đánh giá của AI:</strong>
-                <span id="matchResult" style="font-size: 13px; color: var(--text-sub); font-weight: 500;">...</span>
+        <div class="input-group">
+            <label for="usernameInput">Tên của bạn là gì?</label>
+            <input type="text" id="usernameInput" placeholder="Nhập tên của bạn..." autocomplete="off">
+        </div>
+        
+        <div class="input-group">
+            <label for="goalSelect">Mục tiêu luyện tập hàng ngày</label>
+            <select id="goalSelect">
+                <option value="Casual">Cơ bản (3 câu/ngày)</option>
+                <option value="Serious" selected>Chuyên sâu (10 câu/ngày)</option>
+                <option value="Insane">Đột phá (Toàn bộ 30 câu/ngày)</option>
+            </select>
+        </div>
+
+        <button class="btn-primary" id="joinBtn" style="margin-top: 10px;">Bắt đầu học ngay</button>
+    </div>
+
+    <div id="main-view">
+        <div class="header-status">
+            <div class="user-welcome">🔥 你好, <span id="helloUser" style="color: var(--brand-primary)">User</span>!</div>
+            <div class="streak-badge">⚡ <span id="streakCount">0</span> Ngày liên tiếp</div>
+        </div>
+
+        <div class="tracker-info">
+            <span>Tiến độ thử thách ngày</span>
+            <span id="progressIndicator">Câu 1 / 30</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressBarFill"></div></div>
+
+        <div style="text-align: center;">
+            <span id="difficultyLabel" class="level-badge lvl-easy">Dễ</span>
+            <div class="phrase-display-card" id="currentPhraseText">Loading...</div>
+        </div>
+
+        <div class="action-zone">
+            <div class="audio-wave" id="waveBox">
+                <div class="wave-pillar"></div><div class="wave-pillar"></div><div class="wave-pillar"></div><div class="wave-pillar"></div><div class="wave-pillar"></div>
             </div>
-            <div class="score" id="finalScore">0%</div>
+            <button class="btn-primary" id="micBtn">🎤 Nhấn để nói</button>
+            <button class="btn-secondary" id="continueBtn">Câu tiếp theo ➜</button>
+        </div>
+
+        <div class="result-panel" id="resultPanel">
+            <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase;">Kết quả nhận diện:</p>
+            <div class="user-speech-preview" id="transcriptOutput">...</div>
+
+            <div class="score-grand-card">
+                <div>
+                    <h3 class="grand-title">Điểm tổng quát</h3>
+                    <div class="grand-desc" id="overallFeedback">Phát âm rất tuyệt vời!</div>
+                </div>
+                <div class="grand-score-number" id="grandScoreDisplay">0%</div>
+            </div>
+
+            <div class="criteria-grid">
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <span>🎯 Độ chính xác chữ Hán (Character Accuracy)</span>
+                        <span id="accScore">0%</span>
+                    </div>
+                    <div class="criterion-bar-bg"><div class="criterion-bar-fill" id="accBar"></div></div>
+                    <div class="criterion-feedback" id="accComment">...</div>
+                </div>
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <span>⚡ Độ lưu loát & Tốc độ (Fluency Rate)</span>
+                        <span id="fluScore">0%</span>
+                    </div>
+                    <div class="criterion-bar-bg"><div class="criterion-bar-fill" id="fluBar"></div></div>
+                    <div class="criterion-feedback" id="fluComment">...</div>
+                </div>
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <span>🗣️ Ngữ điệu Phổ thông chuẩn (Mandarin Tone)</span>
+                        <span id="prnScore">0%</span>
+                    </div>
+                    <div class="criterion-bar-bg"><div class="criterion-bar-fill" id="prnBar"></div></div>
+                    <div class="criterion-feedback" id="prnComment">...</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Kho 30 câu giao tiếp Tiếng Trung chia theo 3 cấp độ (kèm chữ cứng và Pinyin)
     const dataset = [
-        { text: "Hello, how are you today?", level: "easy" },
-        { text: "I like to drink hot coffee in the morning.", level: "easy" },
-        { text: "The cat is sleeping on the comfortable mat.", level: "easy" },
-        { text: "Beautiful weather we are having today.", level: "medium" },
-        { text: "Could you please tell me the way to the train station?", level: "medium" },
-        { text: "Practice makes perfect when learning a new language.", level: "medium" },
-        { text: "I would like to schedule an appointment for next week.", level: "medium" },
-        { text: "Peter Piper picked a peck of pickled peppers.", level: "hard" },
-        { text: "The entrepreneurial strategy yielded incredible global results.", level: "hard" },
-        { text: "She sells seashells by the seashore.", level: "hard" }
+        // CẤP ĐỘ DỄ (1-10)
+        { text: "你好，很高兴认识你。", pinyin: "Nǐ hǎo, hěn gāoxìng rènshi nǐ.", level: "easy" },
+        { text: "你今天怎么样？", pinyin: "Nǐ jīntiān zěnmeyàng?", level: "easy" },
+        { text: "谢谢你的科学帮助。", pinyin: "Xièxie nǐ de kēxué bāngzhù.", level: "easy" },
+        { text: "我喜欢喝热咖啡。", pinyin: "Wǒ xǐhuan hē rè kāfēi.", level: "easy" },
+        { text: "这是一个好主意！", pinyin: "Zhè shì yí gè hǎo zhǔyi!", level: "easy" },
+        { text: "祝你今天愉快！", pinyin: "Zhù nǐ jīntiān yúkuài!", level: "easy" },
+        { text: "请问这个多少钱？", pinyin: "Qǐngwèn zhège duōshǎo qián?", level: "easy" },
+        { text: "我在路上，马上到。", pinyin: "Wǒ zài lùshàng, mǎshàng dào.", level: "easy" },
+        { text: "没关系，别客气。", pinyin: "Méi guānxi, bié kèqi.", level: "easy" },
+        { text: "现在几点了？", pinyin: "Xiànzài jǐ diǎn le?", level: "easy" },
+        // CẤP ĐỘ TRUNG BÌNH (11-20)
+        { text: "期待我们下周的会议。", pinyin: "Qīdài wǒmen xiàzhōu de huìyì.", level: "medium" },
+        { text: "请问去火车站怎么走？", pinyin: "Qǐngwèn qù huǒchēzhàn zěnme zǒu?", level: "medium" },
+        { text: "熟能生巧，继续加油！", pinyin: "Shú néng shēng qiǎo, jìxù jiāyóu!", level: "medium" },
+        { text: "请帮我拿一下那个盒子。", pinyin: "Qǐng bāng wǒ ná yíxià nàgè hézi.", level: "medium" },
+        { text: "凡事皆有因，别轻易放弃。", pinyin: "Fánshì jiē yǒu yīn, bié qīngyì fàngqì.", level: "medium" },
+        { text: "别着急，时间还很充裕。", pinyin: "Bié zháojí, shíjiān hái hěn chōngyù.", level: "medium" },
+        { text: "我想预约下周的医生。", pinyin: "Wǒ xiǎng yùyuē xiàzhōu de yīshēng.", level: "medium" },
+        { text: "今天的经济形势非常复杂。", pinyin: "Jīntiān de jīngjì xíngshì fēicháng fùzá.", level: "medium" },
+        { text: "保护环境是大家的责任。", pinyin: "Bǎohù huánjìng shì dàjiā de zérèn.", level: "medium" },
+        { text: "请问有什么我可以帮您的？", pinyin: "Qǐngwèn yǒu shénme wǒ kěyǐ bāng nín de?", level: "medium" },
+        // CẤP ĐỘ KHÓ & XOẮN LƯỠI (21-30)
+        { text: "创新型企业家热情地介绍了他的革命性战略。", pinyin: "Chuàngxīnxíng qǐyèjiā rèqíng de jièshàole tā de gémìngxìng zhànlüè.", level: "hard" },
+        { text: "吃葡萄不吐葡萄皮，不吃葡萄倒吐葡萄皮。", pinyin: "Chī pútáo bù tǔ pútáo pí, bù chī pútáo dào tǔ pútáo pí.", level: "hard" },
+        { text: "无论面对什么困难，我们都要保持乐观的心态。", pinyin: "Wúlùn miànduì shénme kùnnán, wǒmen dōu yào bǎochí lèguān de xīntài.", level: "hard" },
+        { text: "可持续发展已成为当今全球共同面临的重大课题。", pinyin: "Kěchíxù fāzhǎn yǐ chéngwéi dāngjīn quánqiú gòngtóng miànlín de zhòngdà kètí.", level: "hard" },
+        { text: "优秀的建筑设计需要精密规划和严谨的结构。", pinyin: "Yōuxiù de jiànzhù shèjì xūyào jīngmì guīhuà hé yánjǐn de jiégòu.", level: "hard" },
+        { text: "冰冻三尺非一日之寒，水滴石穿非一日之功。", pinyin: "Bīngdòng sān chǐ fēi yī rì zhī hán, shuǐdīshíchuān fēi yī rì zhī gōng.", level: "hard" },
+        { text: "数字化转型对传统企业来说既是机遇也是挑战。", pinyin: "Shùzìhuà zhuǎnxíng duì chuántǒng qǐyè lái shuō jìshì jīyù yěshì tiǎozhàn.", level: "hard" },
+        { text: "虚心使人进步，骄傲使人落后。", pinyin: "Xūxīn shǐ rén jìnbù, jiāo'ào shǐ rén luòhòu.", level: "hard" },
+        { text: "尽管遇到了重重阻力，他们依然坚持达成了合作。", pinyin: "Jǐnguǎn yùdàole chóngchóng zǔlì, tāmen yīrán jiānchí dáchéngle hézuò.", level: "hard" },
+        { text: "八百标兵奔北坡，炮兵并排北坡跑。", pinyin: "Bābǎi biāobīng bēn běipō, pàobīng bìngpái běipō pǎo.", level: "hard" }
     ];
 
     let orderList = [];
     let currentPointer = 0;
     let currentPhraseIndex = 0;
+    let userName = "Learner";
+    let speechStartTime;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Vui lòng sử dụng Google Chrome!");
+        alert("Trình duyệt không hỗ trợ Web Speech API. Vui lòng mở bằng Google Chrome!");
     } else {
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US'; 
+        recognition.lang = 'zh-CN'; // CHUYỂN ĐỔI SANG TIẾNG TRUNG QUỐC (MANDARIN)
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
-        // DOM DOM
-        const targetPhrase = document.getElementById('targetPhrase');
-        const difficultyBadge = document.getElementById('difficultyBadge');
-        const startBtn = document.getElementById('startBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const resultArea = document.getElementById('resultArea');
-        const userTranscript = document.getElementById('userTranscript');
-        const matchResult = document.getElementById('matchResult');
-        const finalScore = document.getElementById('finalScore');
-        const waveVisualizer = document.getElementById('waveVisualizer');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
+        const onboardingView = document.getElementById('onboarding-view');
+        const mainView = document.getElementById('main-view');
+        const usernameInput = document.getElementById('usernameInput');
+        const joinBtn = document.getElementById('joinBtn');
+        const helloUser = document.getElementById('helloUser');
+        const streakCount = document.getElementById('streakCount');
+        const progressIndicator = document.getElementById('progressIndicator');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const difficultyLabel = document.getElementById('difficultyLabel');
+        const currentPhraseText = document.getElementById('currentPhraseText');
+        const micBtn = document.getElementById('micBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        const waveBox = document.getElementById('waveBox');
+        const resultPanel = document.getElementById('resultPanel');
+        const transcriptOutput = document.getElementById('transcriptOutput');
+        const grandScoreDisplay = document.getElementById('grandScoreDisplay');
+        const overallFeedback = document.getElementById('overallFeedback');
 
-        function generateRandomOrder() {
+        const accScore = document.getElementById('accScore');
+        const accBar = document.getElementById('accBar');
+        const accComment = document.getElementById('accComment');
+        const fluScore = document.getElementById('fluScore');
+        const fluBar = document.getElementById('fluBar');
+        const fluComment = document.getElementById('fluComment');
+        const prnScore = document.getElementById('prnScore');
+        const prnBar = document.getElementById('prnBar');
+        const prnComment = document.getElementById('prnComment');
+
+        function handleStreak() {
+            let lastDate = localStorage.getItem('zh_coach_last_date');
+            let currentStreak = parseInt(localStorage.getItem('zh_coach_streak_count')) || 0;
+            const todayStr = new Date().toDateString();
+
+            if (lastDate) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (lastDate === todayStr) {
+                    // Đã học
+                } else if (lastDate === yesterday.toDateString()) {
+                    currentStreak++;
+                    localStorage.setItem('zh_coach_streak_count', currentStreak);
+                } else {
+                    currentStreak = 1;
+                    localStorage.setItem('zh_coach_streak_count', currentStreak);
+                }
+            } else {
+                currentStreak = 1;
+                localStorage.setItem('zh_coach_streak_count', currentStreak);
+            }
+            localStorage.setItem('zh_coach_last_date', todayStr);
+            streakCount.innerText = currentStreak;
+        }
+
+        function buildQuizOrder() {
             orderList = [...Array(dataset.length).keys()];
             for (let i = orderList.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -385,114 +342,164 @@
             currentPointer = 0;
         }
 
+        joinBtn.addEventListener('click', () => {
+            if(usernameInput.value.trim() !== "") {
+                userName = usernameInput.value.trim();
+            }
+            helloUser.innerText = userName;
+            handleStreak();
+            buildQuizOrder();
+            
+            onboardingView.style.display = "none";
+            mainView.style.display = "block";
+            loadPhrase();
+        });
+
         function loadPhrase() {
             currentPhraseIndex = orderList[currentPointer];
-            const item = dataset[currentPhraseIndex];
-            
-            targetPhrase.innerText = item.text;
-            difficultyBadge.innerText = item.level;
-            difficultyBadge.className = "badge badge-" + item.level;
-            
-            // Cập nhật thanh tiến trình mượt mà
-            const progressPercent = ((currentPointer + 1) / dataset.length) * 100;
-            progressBar.style.width = progressPercent + "%";
-            progressText.innerText = `Câu ${currentPointer + 1} / ${dataset.length}`;
+            const activeItem = dataset[currentPhraseIndex];
 
-            resultArea.style.display = "none";
-            nextBtn.style.display = "none";
-            waveVisualizer.style.display = "none";
-            startBtn.disabled = false;
-            startBtn.className = ""; 
-            startBtn.innerHTML = "🎤 Bắt đầu nói";
+            // Hiển thị chữ Hán to rõ ràng kèm Pinyin ngay dưới
+            currentPhraseText.innerHTML = `
+                <div style="font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 10px; letter-spacing: 1px;">${activeItem.text}</div>
+                <div style="font-size: 15px; color: #64748b; font-weight: 500; font-style: italic;">${activeItem.pinyin}</div>
+            `;
+            
+            difficultyLabel.innerText = activeItem.level === 'easy' ? "Dễ" : activeItem.level === 'medium' ? "Trung Bình" : "Khó";
+            difficultyLabel.className = `level-badge lvl-${activeItem.level}`;
+
+            const progPct = ((currentPointer + 1) / dataset.length) * 100;
+            progressBarFill.style.width = progPct + "%";
+            progressIndicator.innerText = `Câu ${currentPointer + 1} / ${dataset.length}`;
+
+            resultPanel.style.display = "none";
+            continueBtn.style.display = "none";
+            waveBox.style.display = "none";
+            micBtn.style.display = "block";
+            micBtn.disabled = false;
+            micBtn.innerHTML = "🎤 Nhấn để nói";
+            micBtn.className = "btn-primary";
         }
 
-        startBtn.addEventListener('click', () => {
+        micBtn.addEventListener('click', () => {
             recognition.start();
-            startBtn.innerHTML = "⚡ Đang lắng nghe...";
-            startBtn.classList.add('listening'); 
-            waveVisualizer.style.display = "flex"; 
-            resultArea.style.display = "none";
+            speechStartTime = Date.now();
+            micBtn.innerHTML = "⚡ Lão sư AI đang nghe...";
+            micBtn.classList.add('listening-mode');
+            waveBox.style.display = "flex";
+            resultPanel.style.display = "none";
         });
 
         recognition.onresult = (event) => {
-            const speechResult = event.results[0][0].transcript;
-            const confidence = event.results[0][0].confidence; 
+            const resultText = event.results[0][0].transcript;
+            const googleConfidence = event.results[0][0].confidence;
+            const durationSec = (Date.now() - speechStartTime) / 1000;
 
-            userTranscript.innerText = `"${speechResult}"`;
+            transcriptOutput.innerText = `"${resultText}"`;
+
+            const targetSentence = dataset[currentPhraseIndex].text;
             
-            const cleanTarget = cleanText(dataset[currentPhraseIndex].text);
-            const cleanSpeech = cleanText(speechResult);
+            // THUẬT TOÁN ĐÁNH GIÁ TIẾNG TRUNG THEO TỪNG KÝ TỰ (CHARACTER-BASED ACCURACY)
+            const cleanTargetChars = cleanChineseString(targetSentence);
+            const cleanSpeechChars = cleanChineseString(resultText);
+            
+            let matchCount = 0;
+            let speechTrack = [...cleanSpeechChars];
+            
+            cleanTargetChars.forEach(char => {
+                const index = speechTrack.indexOf(char);
+                if (index !== -1) {
+                    matchCount++;
+                    speechTrack.splice(index, 1); // Loại bỏ ký tự đã khớp tránh trùng lặp
+                }
+            });
+            
+            const accuracyScore = Math.round((matchCount / cleanTargetChars.length) * 100);
 
-            const score = calculateScore(cleanTarget, cleanSpeech, confidence);
-            displayResults(score);
+            // TÍNH ĐỘ LƯU LOÁT THEO CPM (Characters Per Minute)
+            // Chuẩn người Trung Quốc nói trung bình khoảng 200 - 240 ký tự/phút.
+            const charCount = cleanSpeechWordsCount = cleanSpeechChars.length;
+            const cpm = durationSec > 0 ? (charCount / durationSec) * 60 : 0;
+            let fluencyScore = 100;
+            if(cpm < 90) fluencyScore = Math.max(40, Math.round(cpm * 1.0)); // Nói quá ngập ngừng
+            if(cpm > 360) fluencyScore = 70; // Nói quá nhanh, nuốt chữ
+            if(accuracyScore < 30) fluencyScore = Math.min(fluencyScore, accuracyScore + 10);
+
+            // NGỮ ĐIỆU PHỔ THÔNG TRUNG ƯƠNG (Bắt âm AI)
+            let pronunciationScore = Math.round(googleConfidence * 100);
+            if(resultText === "") pronunciationScore = 0;
+
+            const finalOverallScore = Math.round((accuracyScore * 0.4) + (fluencyScore * 0.3) + (pronunciationScore * 0.3));
+
+            displayDetailedResults(finalOverallScore, accuracyScore, fluencyScore, pronunciationScore);
         };
 
         recognition.onspeechend = () => {
             recognition.stop();
-            startBtn.className = "";
-            startBtn.innerHTML = "🎤 Bắt đầu nói";
-            waveVisualizer.style.display = "none";
+            waveBox.style.display = "none";
         };
 
-        recognition.onerror = (event) => {
-            alert("Lỗi thu âm hoặc không nghe thấy gì. Hãy thử bấm nói lại nhé!");
-            startBtn.className = "";
-            startBtn.innerHTML = "🎤 Bắt đầu nói";
-            waveVisualizer.style.display = "none";
-            startBtn.disabled = false;
+        recognition.onerror = () => {
+            alert("AI không nghe rõ giọng của bạn. Hãy nhấn nút và thử lại lần nữa nhé!");
+            loadPhrase();
         };
 
-        nextBtn.addEventListener('click', () => {
+        continueBtn.addEventListener('click', () => {
             currentPointer++;
             if (currentPointer >= dataset.length) {
-                alert("🎉 Quá đỉnh! Bạn đã hoàn thành trọn bộ 10 câu thử thách!");
-                generateRandomOrder();
+                alert(`🎉 Quá tuyệt vời ${userName}! Bạn đã hoàn thành trọn vẹn thử thách 30 câu Tiếng Trung ngày hôm nay!`);
+                buildQuizOrder();
             }
             loadPhrase();
         });
 
-        function cleanText(text) {
-            return text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+        // Hàm dọn dẹp các dấu câu đặc thù của Trung Quốc
+        function cleanChineseString(str) {
+            return str.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？；：（）、「」、“”\s]/g,"").split("");
         }
 
-        function calculateScore(target, speech, confidence) {
-            const targetWords = target.split(' ');
-            const speechWords = speech.split(' ');
+        function displayDetailedResults(final, acc, flu, prn) {
+            resultPanel.style.display = "block";
+            micBtn.style.display = "none";
+            continueBtn.style.display = "block";
+
+            grandScoreDisplay.innerText = final + "%";
+            grandScoreDisplay.className = "grand-score-number " + getStatusColorClass(final);
             
-            let matchedCount = 0;
-            targetWords.forEach(word => {
-                if (speechWords.includes(word)) matchedCount++;
-            });
+            if(final >= 85) overallFeedback.innerText = `Rất tốt ${userName}! Giọng bạn nghe rất có phong thái của người bản xứ Bắc Kinh.`;
+            else if(final >= 65) overallFeedback.innerText = `Khá ổn ${userName}, chú ý chuẩn hóa các thanh điệu (thanh 1, 2, 3, 4) bị lệch nhé.`;
+            else overallFeedback.innerText = `Cố lên ${userName}! Hãy nhìn kỹ phiên âm Pinyin, điều chỉnh hơi và đọc chậm lại.`;
 
-            const wordMatchRatio = matchedCount / targetWords.length;
-            let finalScore = (wordMatchRatio * 0.6 + confidence * 0.4) * 100;
-            
-            if (speech === "") finalScore = 0;
-            return Math.min(Math.max(Math.round(finalScore), 0), 100);
+            // Thanh 1: Accuracy chữ cứng
+            accScore.innerText = acc + "%";
+            accBar.style.width = acc + "%";
+            accBar.className = "criterion-bar-fill " + getStatusBgClass(acc);
+            accComment.innerText = acc >= 85 ? "Bộ nhận diện bắt khớp hoàn hảo gần như toàn bộ các chữ Hán trong câu." : acc >= 60 ? "Có vài chữ Hán phát âm chưa tròn vành rõ chữ khiến AI nhận diện nhầm sang chữ khác." : "Sai sót quá nhiều ký tự hoặc hệ thống không bắt được từ khóa.";
+
+            // Thanh 2: Fluency tốc độ nói
+            fluScore.innerText = flu + "%";
+            fluBar.style.width = flu + "%";
+            fluBar.className = "criterion-bar-fill " + getStatusBgClass(flu);
+            fluComment.innerText = flu >= 85 ? "Tốc độ nói (CPM) cực kỳ mượt mà, ngắt nghỉ câu từ tự nhiên." : flu >= 60 ? "Nhịp điệu nói còn hơi ngập ngừng, khoảng cách giữa các chữ bị rời rạc." : "Nói quá chậm hoặc ngắt quãng quá lâu, cần luyện phản xạ đọc liền mạch.";
+
+            // Thanh 3: Ngữ điệu phổ thông (Mandarin tone)
+            prnScore.innerText = prn + "%";
+            prnBar.style.width = prn + "%";
+            prnBar.className = "criterion-bar-fill " + getStatusBgClass(prn);
+            prnComment.innerText = prn >= 85 ? "Âm gió (b, p, m, f, zh, ch, sh) và thanh điệu kiểm soát rất tốt." : prn >= 60 ? "Khẩu hình mở chưa chuẩn ở các âm khó hoặc biến điệu của thanh 3 chưa rõ." : "Phát âm sai lệch nhiều âm cốt lõi, giọng đọc bị thiếu năng lượng.";
         }
 
-        function displayResults(score) {
-            resultArea.style.display = "block";
-            finalScore.innerText = score + "%";
-            finalScore.className = "score"; 
-
-            if (score >= 85) {
-                finalScore.classList.add('good');
-                matchResult.innerText = "Giọng bạn chuẩn như người bản xứ tại Mỹ! Tuyệt hảo.";
-            } else if (score >= 60) {
-                finalScore.classList.add('average');
-                matchResult.innerText = "Rất tốt, lưu ý nối âm nhẹ và phát âm rõ âm đuôi hơn.";
-            } else {
-                finalScore.classList.add('bad');
-                matchResult.innerText = "AI chưa nghe rõ lắm. Đọc chậm lại, tròn vành rõ chữ nhé.";
-            }
-
-            nextBtn.style.display = "block";
-            startBtn.disabled = true; 
+        function getStatusColorClass(score) {
+            if (score >= 85) return 'status-good';
+            if (score >= 60) return 'status-average';
+            return 'status-bad';
         }
 
-        generateRandomOrder();
-        loadPhrase();
+        function getStatusBgClass(score) {
+            if (score >= 85) return 'bg-good';
+            if (score >= 60) return 'bg-average';
+            return 'bg-bad';
+        }
     }
 </script>
 
