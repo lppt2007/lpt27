@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chinese Vocab Pro v2.5 (Sudden Death Edition)</title>
+    <title>AI Chinese Vocab Pro v2.6 (Multi-Voice Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -58,7 +58,6 @@
         .welcome-msg { font-weight: 800; font-size: 16px; }
         .mode-pill { background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; }
         
-        /* Stats dashboard widgets */
         .stats-dashboard { display: flex; gap: 10px; margin-bottom: 15px; background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #f1f5f9; }
         .stat-badge { flex: 1; text-align: center; font-size: 12px; font-weight: 700; color: #475569; }
         .stat-badge span { display: block; font-size: 16px; font-weight: 800; color: var(--brand-primary); }
@@ -90,7 +89,6 @@
         .target-cn { font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: 1px; }
         .target-py { font-size: 16px; color: #64748b; font-weight: 500; margin-top: 8px; }
         
-        /* Translation container box */
         .translation-box { margin-top: 15px; padding: 10px; background: #f0fdfa; border-radius: 10px; color: #0d9488; font-weight: 700; font-size: 14px; display: none; border: 1px dashed #99f6e4; }
 
         .hidden-element { display: none !important; }
@@ -110,7 +108,6 @@
         .btn-secondary:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
         .btn-secondary:disabled { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; cursor: not-allowed; }
 
-        /* Sudden death panel styles */
         #sudden-death-panel { display: none; justify-content: center; align-items: center; gap: 8px; font-size: 18px; margin-bottom: 15px; background: #fff1f2; border: 1px solid #ffe4e6; padding: 8px; border-radius: 12px; color: var(--rose-danger); font-weight: 800; animation: shakeDanger 0.5s ease hidden; }
         @keyframes shakeDanger { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
 
@@ -136,10 +133,9 @@
 <body>
 
 <div class="app-window">
-    <!-- MÀN HÌNH SETTING BAN ĐẦU -->
     <div id="setup-view">
-        <h1 class="title-main">🇨🇳 AI Chinese Vocab Pro v2.5</h1>
-        <p class="subtitle">Chế độ Sudden Death & Hệ thống lưu trữ thông minh</p>
+        <h1 class="title-main">🇨🇳 AI Chinese Vocab Pro v2.6</h1>
+        <p class="subtitle">Bản cập nhật nâng cấp giọng đọc AI đa nhân dạng</p>
         
         <div class="form-group">
             <label>Tên học viên:</label>
@@ -176,20 +172,17 @@
         <button class="btn-action-mic" id="start-btn" style="margin-top: 10px;">Bắt đầu học ngay</button>
     </div>
 
-    <!-- MÀN HÌNH LUYỆN TẬP CHÍNH -->
     <div id="main-view">
         <div class="top-meta">
             <div class="welcome-msg">你好, <span id="display-name" style="color:var(--brand-primary)">...</span> 👋</div>
             <div class="mode-pill" id="display-mode">Chế độ luyện tập</div>
         </div>
 
-        <!-- BẢNG THEO DÕI STREAK & KỶ LỤC -->
         <div class="stats-dashboard">
             <div class="stat-badge">🔥 Chuỗi Ngày (Streak)<span id="stat-streak">0 ngày</span></div>
             <div class="stat-badge">🏆 Điểm Kỷ Lục<span id="stat-highscore">0%</span></div>
         </div>
 
-        <!-- THANH MẠNG SINH TỒN (ẨN KHI CHƠI NORMAL) -->
         <div id="sudden-death-panel">
             <span>MẠNG SỐNG:</span>
             <span id="hearts-container">❤️ ❤️ ❤️</span>
@@ -212,7 +205,16 @@
                 <div class="toggle-slider"></div>
                 <span>Hiện nghĩa Việt</span>
             </div>
-            <button class="btn-secondary" id="btn-audio-sample" style="padding: 4px 10px; font-size: 12px; border-radius: 8px;">🔊 Nghe mẫu</button>
+            
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <select id="voice-select" style="padding: 5px 8px; font-size: 11px; border-radius: 8px; width: auto; border: 1px solid #cbd5e1; font-weight: 700; color: #475569; background: white;">
+                    <option value="female" selected>👩 Nữ AI</option>
+                    <option value="male">👨 Nam AI</option>
+                    <option value="robot">🤖 Giọng Máy</option>
+                    <option value="random">🔀 Ngẫu nhiên</option>
+                </select>
+                <button class="btn-secondary" id="btn-audio-sample" style="padding: 5px 10px; font-size: 11px; border-radius: 8px; background: var(--brand-primary); color: white; border: none;">🔊 Nghe</button>
+            </div>
         </div>
 
         <div style="text-align: center;">
@@ -224,7 +226,6 @@
             </div>
         </div>
 
-        <!-- ĐIỀU KHIỂN THU ÂM CHỦ ĐỘNG -->
         <div style="text-align: center;">
             <button class="btn-action-mic" id="btn-mic">🎤 Bắt đầu đọc</button>
             <p style="font-size: 12px; color:#475569; margin-top: 10px; font-weight: 600;">💡 Nhấn nút Micro ➔ Đọc to rõ ràng câu chữ Hán ➔ Chữ chạy trực tiếp ➔ Bấm nút để chấm điểm.</p>
@@ -235,7 +236,6 @@
             </div>
         </div>
 
-        <!-- BẢNG ĐÁNH GIÁ ĐIỂM SỐ CHI TIẾT -->
         <div class="report-section" id="report-panel">
             <div style="font-size: 12px; font-weight:700; color:#475569; margin-bottom:4px; text-align: left;">AI đang nghe thấy bạn đọc:</div>
             <div class="preview-box" id="text-transcript">...</div>
@@ -248,7 +248,6 @@
                 <div class="score-big" id="score-total">0%</div>
             </div>
 
-            <!-- 5 TIÊU CHÍ ĐÁNH GIÁ -->
             <div class="metrics-grid">
                 <div class="metric-item">
                     <div class="metric-top"><span>🎯 1. Độ chính xác từ vựng</span><span id="val-acc">0%</span></div>
@@ -276,7 +275,11 @@
 </div>
 
 <script>
-    // KHO TỪ VỰNG CHUẨN CẬP NHẬT THÊM NGHĨA TIẾNG VIỆT
+    // KÍCH HOẠT CACHE GIỌNG ĐỌC TRÌNH DUYỆT TRÁNH LỖI ASYNC
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+    }
+
     const rawDataset = [
         { text: "谢谢", pinyin: "xièxie", translation: "Cảm ơn", level: "easy" },
         { text: "再见", pinyin: "zàijiàn", translation: "Tạm biệt", level: "easy" },
@@ -295,7 +298,7 @@
         { text: "生日快乐", pinyin: "shēngrì kuàilè", translation: "Chúc mừng sinh nhật", level: "easy" },
         { text: "认识你很高兴。", pinyin: "Rènshi nǐ hěn gāoxìng.", translation: "Rất vui được quen biết bạn.", level: "easy" },
         { text: "这个多少钱？", pinyin: "Zhège duōshǎo qián?", translation: "Cái này bao nhiêu tiền?", level: "easy" },
-        { text: "我会 say 汉语。", pinyin: "Wǒ huì shuō Hànyǔ.", translation: "Tôi biết nói tiếng Trung.", level: "easy" },
+        { text: "我会说汉语。", pinyin: "Wǒ huì shuō Hànyǔ.", translation: "Tôi biết nói tiếng Trung.", level: "easy" },
         { text: "太谢谢你了！", pinyin: "Tài xièxie nǐ le!", translation: "Cảm ơn bạn nhiều lắm!", level: "easy" },
         { text: "再见，明天见。", pinyin: "Zàijiàn, míngtiān jiàn.", translation: "Tạm biệt, ngày mai gặp lại.", level: "easy" },
         { text: "面包", pinyin: "miànbāo", translation: "Bánh mì", level: "easy" },
@@ -335,24 +338,22 @@
     let activeSessionQueue = [];
     let currentPointer = 0;
     let isPinyinHidden = false;
-    let isTranslationVisible = false; // Mới
+    let isTranslationVisible = false; 
     let isListening = false;
     let activeRecognition = null;
     
-    // Quản lý Sinh Tồn & Điểm số (Mới)
     let isSurvivalMode = false;
     let playerLives = 3;
     let userStreak = 0;
     let userHighScore = 0;
 
-    // KHO SOUND EFFECTS KHÔNG BẢN QUYỀN (Hỗ trợ Audio)
     const audioBGM = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'); 
     audioBGM.loop = true;
-    audioBGM.volume = 0.25; // Giữ nhạc nền vừa phải
+    audioBGM.volume = 0.25; 
 
-    const sfxSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav'); // Ting Ting xịn
-    const sfxFail = new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-84.wav'); // Nhạc trầm buồn/Buzz
-    const sfxHurt = new Audio('https://assets.mixkit.co/active_storage/sfx/2573/2573-84.wav'); // Tiếng va đập mất mạng
+    const sfxSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav'); 
+    const sfxFail = new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-84.wav'); 
+    const sfxHurt = new Audio('https://assets.mixkit.co/active_storage/sfx/2573/2573-84.wav'); 
 
     let gatheredTranscript = "";
     let liveFallbackBuffer = ""; 
@@ -362,10 +363,10 @@
     const setupView = document.getElementById('setup-view');
     const mainView = document.getElementById('main-view');
     const togglePinyin = document.getElementById('toggle-pinyin');
-    const toggleTranslation = document.getElementById('toggle-translation'); // Mới
+    const toggleTranslation = document.getElementById('toggle-translation'); 
     const targetChinese = document.getElementById('target-chinese');
     const targetPinyin = document.getElementById('target-pinyin');
-    const targetTranslation = document.getElementById('target-translation'); // Mới
+    const targetTranslation = document.getElementById('target-translation'); 
     const btnMic = document.getElementById('btn-mic');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
@@ -373,12 +374,10 @@
     const textTranscript = document.getElementById('text-transcript');
     const scoreTotal = document.getElementById('score-total');
 
-    // Tải dữ liệu lưu trữ từ Trình duyệt (Streak & Highscore)
     window.addEventListener('DOMContentLoaded', () => {
         userHighScore = parseInt(localStorage.getItem('ai_vocab_highscore')) || 0;
         document.getElementById('stat-highscore').innerText = userHighScore + "%";
         
-        // Quản lý Streak thông minh theo ngày liên tục
         const lastDate = localStorage.getItem('ai_vocab_last_date');
         userStreak = parseInt(localStorage.getItem('ai_vocab_streak')) || 0;
         const todayStr = new Date().toDateString();
@@ -387,9 +386,9 @@
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             if (lastDate === yesterday.toDateString()) {
-                // Giữ streak từ hôm qua
+                // Không đổi
             } else if (lastDate !== todayStr) {
-                userStreak = 0; // Đứt streak nếu bỏ ngày học
+                userStreak = 0; 
                 localStorage.setItem('ai_vocab_streak', 0);
             }
         }
@@ -413,9 +412,8 @@
             document.getElementById('display-mode').style.background = "#ffe4e6";
             document.getElementById('display-mode').style.color = "#9f1239";
             
-            // Chạy nhạc nền căng thẳng ngay khi bắt đầu sinh tồn
             audioBGM.currentTime = 0;
-            audioBGM.play().catch(e => console.log("Chờ tương tác người dùng để bật nhạc"));
+            audioBGM.play().catch(e => console.log("Chờ tương tác để phát nhạc"));
         } else {
             document.getElementById('sudden-death-panel').style.display = "none";
             document.getElementById('display-mode').innerText = `Thường: ${quantity} câu`;
@@ -451,18 +449,66 @@
         targetPinyin.classList.toggle('hidden-element', isPinyinHidden);
     });
 
-    // Toggle dịch nghĩa Việt (Mới)
     toggleTranslation.addEventListener('click', () => {
         isTranslationVisible = !isTranslationVisible;
         toggleTranslation.classList.toggle('active-toggle', isTranslationVisible);
         targetTranslation.style.display = isTranslationVisible ? "block" : "none";
     });
 
+    // ==========================================
+    // NÂNG CẤP HỆ THỐNG GIỌNG ĐỌC AI CAO CẤP (AN TOÀN TUYỆT ĐỐI)
+    // ==========================================
     document.getElementById('btn-audio-sample').addEventListener('click', () => {
         const currentItem = activeSessionQueue[currentPointer];
         const utterance = new SpeechSynthesisUtterance(currentItem.text);
         utterance.lang = 'zh-CN';
+        
+        // Lấy tất cả thư viện giọng tiếng Trung khả dụng trên thiết bị
+        let allAvailableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.includes('zh') || v.lang.includes('ZH'));
+        const userSelectedMode = document.getElementById('voice-select').value;
+        
+        let targetExecutionMode = userSelectedMode;
+        if (userSelectedMode === 'random') {
+            const poolOptions = ['female', 'male', 'robot'];
+            targetExecutionMode = poolOptions[Math.floor(Math.random() * poolOptions.length)];
+        }
+
+        // Thông số cấu hình tối ưu hóa mặc định cho con người đọc
         utterance.rate = 0.82; 
+        utterance.pitch = 1.0; 
+
+        if (targetExecutionMode === 'female') {
+            // Săn các gói giọng nữ chất lượng cao (Xiaoxiao, Tingting, Premium)
+            let optimalFemale = allAvailableVoices.find(v => 
+                v.name.toLowerCase().includes('xiaoxiao') || 
+                v.name.toLowerCase().includes('tingting') || 
+                v.name.toLowerCase().includes('female') || 
+                v.name.toLowerCase().includes('google')
+            );
+            if (optimalFemale) utterance.voice = optimalFemale;
+            utterance.pitch = 1.05; // Đẩy tông thanh thoát hơn
+            
+        } else if (targetExecutionMode === 'male') {
+            // Săn các gói giọng nam chất lượng cao (Yunxi, Kangkang, Male, Yunyang)
+            let optimalMale = allAvailableVoices.find(v => 
+                v.name.toLowerCase().includes('yunxi') || 
+                v.name.toLowerCase().includes('kangkang') || 
+                v.name.toLowerCase().includes('male') || 
+                v.name.toLowerCase().includes('yunyang')
+            );
+            if (optimalMale) {
+                utterance.voice = optimalMale;
+            } else {
+                // FALLBACK ALGORITHM: Nếu máy không cài sẵn giọng nam, hạ tông pitch trầm xuống để giả lập giọng nam ấm
+                utterance.pitch = 0.76; 
+            }
+            
+        } else if (targetExecutionMode === 'robot') {
+            // Giọng máy móc cơ học: Giảm tốc độ, ép bẹt cao độ đều đều
+            utterance.rate = 0.68;
+            utterance.pitch = 0.45;
+        }
+
         window.speechSynthesis.speak(utterance);
     });
 
@@ -471,7 +517,7 @@
         const item = activeSessionQueue[currentPointer];
         targetChinese.innerText = item.text;
         targetPinyin.innerText = item.pinyin;
-        targetTranslation.innerText = item.translation; // Đưa bản dịch vào thẻ
+        targetTranslation.innerText = item.translation; 
 
         const lblDiff = document.getElementById('lbl-difficulty');
         if(item.level === 'easy') { lblDiff.innerText = "Sơ Cấp (HSK 1-2)"; lblDiff.className = "badge-difficulty diff-easy"; }
@@ -514,7 +560,6 @@
             currentPointer++;
             loadPhrase();
         } else {
-            // Khi hoàn thành trọn vẹn cả lượt học -> Cập nhật tăng chuỗi ngày Streak
             const todayStr = new Date().toDateString();
             const lastDate = localStorage.getItem('ai_vocab_last_date');
             if (lastDate !== todayStr) {
@@ -523,13 +568,13 @@
                 localStorage.setItem('ai_vocab_last_date', todayStr);
             }
             
-            audioBGM.pause(); // Tắt nhạc nền khi kết thúc thắng cuộc
+            audioBGM.pause(); 
             alert("🎉 Xuất sắc! Bạn đã vượt qua toàn bộ mục tiêu luyện tập hôm nay an toàn!");
             location.reload();
         }
     });
 
-    // CẤU HÌNH ENGINE NHẬN DIỆN NGUYÊN BẢN (KHÔNG ĐỔI)
+    // NGUYÊN BẢN 100% ENGINE THU ÂM (ĐƯỢC BẢO VỆ CHẶT CHẼ)
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         alert("Trình duyệt không hỗ trợ Web Speech API.");
@@ -541,7 +586,6 @@
 
         btnMic.addEventListener('click', () => {
             if (!isListening) {
-                // NÉ MIC: Tạm dừng nhạc nền dồn dập khi user nói để không gây nhiễu mic
                 if(isSurvivalMode) audioBGM.pause();
 
                 gatheredTranscript = "";
@@ -589,8 +633,6 @@
 
         activeRecognition.onend = () => {
             resetMicButtonState();
-            
-            // TRẢ LẠI NHẠC NỀN: Bật nhạc lại sau khi mic đã ngắt để chuẩn bị nhận phán quyết điểm số
             if(isSurvivalMode && playerLives > 0) audioBGM.play().catch(e => {});
 
             let absoluteFinalText = gatheredTranscript.trim() || liveFallbackBuffer.trim();
@@ -612,13 +654,11 @@
         };
     }
 
-    // THUẬT TOÁN CHẤM ĐIỂM + XỬ LÝ QUY TẮC PHÒNG GAME MỚI
     function evaluateSpeech(userVoiceText, confidenceLevel) {
         const item = activeSessionQueue[currentPointer];
         const cleanTarget = cleanString(item.text);
         const cleanUser = cleanString(userVoiceText);
 
-        // Các tiêu chí toán học gốc
         let matchCount = 0;
         let poolUser = [...cleanUser];
         cleanTarget.forEach(char => {
@@ -640,35 +680,32 @@
             (completenessScore * 0.1)
         );
 
-        // LƯU KỶ LỤC HIGHSCORE CAO NHẤT (Mới)
         if (finalOverallScore > userHighScore) {
             userHighScore = finalOverallScore;
             localStorage.setItem('ai_vocab_highscore', userHighScore);
             document.getElementById('stat-highscore').innerText = userHighScore + "%";
         }
 
-        // PHÁT SOUND EFFECTS THEO THÀNH TÍCH ĐỌC (Mới)
         if (finalOverallScore >= 85) {
-            sfxSuccess.currentTime = 0; sfxSuccess.play().catch(e=>{}); // Đạt điểm cao phát Chime Ting Ting!
+            sfxSuccess.currentTime = 0; sfxSuccess.play().catch(e=>{}); 
         } else if (finalOverallScore < 65) {
-            sfxFail.currentTime = 0; sfxFail.play().catch(e=>{}); // Quá thấp phát âm thanh cảnh báo hụt hơi
+            sfxFail.currentTime = 0; sfxFail.play().catch(e=>{}); 
         }
 
-        // XỬ LÝ TRỪ MẠNG TRONG CHẾ ĐỘ SINH TỒN (Mới)
         if (isSurvivalMode) {
             if (finalOverallScore < 70) {
                 playerLives--;
                 document.getElementById('sudden-death-panel').style.animation = 'none';
                 setTimeout(() => { document.getElementById('sudden-death-panel').style.animation = 'shakeDanger 0.5s ease'; }, 10);
                 
-                sfxHurt.currentTime = 0; sfxHurt.play().catch(e=>{}); // Tiếng kêu khốc liệt khi mất máu
+                sfxHurt.currentTime = 0; sfxHurt.play().catch(e=>{}); 
 
                 if (playerLives === 3) document.getElementById('hearts-container').innerText = "❤️ ❤️ ❤️";
                 else if (playerLives === 2) document.getElementById('hearts-container').innerText = "❤️ ❤️ 🖤";
                 else if (playerLives === 1) document.getElementById('hearts-container').innerText = "❤️ 🖤 🖤";
                 else {
                     document.getElementById('hearts-container').innerText = "🖤 🖤 🖤";
-                    audioBGM.pause(); // Ngắt nhạc kịch tính nền tức khắc
+                    audioBGM.pause(); 
                     setTimeout(() => {
                         alert(`☠️ GAME OVER! Điểm số câu cuối đạt ${finalOverallScore}%. Bạn đã hết sạch mạng sống. Hãy chăm chỉ luyện tập thêm ở chế độ thường nhé!`);
                         location.reload();
