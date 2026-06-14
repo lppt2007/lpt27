@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Pronunciation Practice - Unit 1 - Grade 12</title>
+    <title>AI English Vocab Pro - Unit 1 Grade 12 (Practice Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -107,9 +107,6 @@
         .btn-secondary:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
         .btn-secondary:disabled { background: #f1f5f9; color: #cbd5e1; border-color: #e2e8f0; cursor: not-allowed; }
 
-        #sudden-death-panel { display: none; justify-content: center; align-items: center; gap: 8px; font-size: 18px; margin-bottom: 15px; background: #fff1f2; border: 1px solid #ffe4e6; padding: 8px; border-radius: 12px; color: var(--rose-danger); font-weight: 800; animation: shakeDanger 0.5s ease hidden; }
-        @keyframes shakeDanger { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
-
         .report-section { margin-top: 25px; border-top: 2px dashed #e2e8f0; padding-top: 20px; display: none; }
         .preview-box { background: #f0fdf4; padding: 14px 18px; border-radius: 12px; font-size: 18px; font-weight: 700; margin-bottom: 15px; border-left: 4px solid var(--mint-success); text-align: left; color: #166534; }
         
@@ -134,19 +131,11 @@
 <div class="app-window">
     <div id="setup-view">
         <h1 class="title-main"> English Pronunciation Practice</h1>
-        <p class="subtitle">Unit 1 - Lớp 12: Life stories we admire</p>
+        <p class="subtitle">Unit 1 - Grade 12: Life stories we admire</p>
         
         <div class="form-group">
             <label>Tên học viên:</label>
             <input type="text" id="username" placeholder="Nhập tên của bạn..." value="Học viên xuất sắc">
-        </div>
-
-        <div class="form-group">
-            <label>Chế độ thử thách:</label>
-            <select id="game-mode-select">
-                <option value="normal" selected>Luyện tập thông thường (Tự do, không giới hạn)</option>
-                <option value="survival">🔥 SINH TỒN (Sudden Death - Đọc dưới 70đ mất 1 mạng!)</option>
-            </select>
         </div>
 
         <div class="form-group">
@@ -176,11 +165,6 @@
         <div class="stats-dashboard">
             <div class="stat-badge">🔥 Chuỗi Ngày (Streak)<span id="stat-streak">0 ngày</span></div>
             <div class="stat-badge">🏆 Điểm Kỷ Lục<span id="stat-highscore">0%</span></div>
-        </div>
-
-        <div id="sudden-death-panel">
-            <span>MẠNG SỐNG:</span>
-            <span id="hearts-container">❤️ ❤️ ❤️</span>
         </div>
 
         <div class="progress-container">
@@ -275,7 +259,7 @@
         speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
     }
 
-    // KHO DỮ LIỆU CHUYỂN ĐỔI SANG 5 TỪ VỰNG TIẾNG ANH UNIT 1 LỚP 12
+    // KHO DỮ LIỆU 5 TỪ VỰNG TIẾNG ANH UNIT 1 LỚP 12
     const finalFullPool = [
         { 
             text: "adopted", 
@@ -321,18 +305,11 @@
     let isListening = false;
     let activeRecognition = null;
     
-    let isSurvivalMode = false;
-    let playerLives = 3;
     let userStreak = 0;
     let userHighScore = 0;
 
-    const audioBGM = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'); 
-    audioBGM.loop = true;
-    audioBGM.volume = 0.25; 
-
     const sfxSuccess = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav'); 
     const sfxFail = new Audio('https://assets.mixkit.co/active_storage/sfx/2572/2572-84.wav'); 
-    const sfxHurt = new Audio('https://assets.mixkit.co/active_storage/sfx/2573/2573-84.wav'); 
 
     let gatheredTranscript = "";
     let liveFallbackBuffer = ""; 
@@ -379,27 +356,11 @@
         const username = document.getElementById('username').value.trim() || "Học viên Pro";
         const quantity = parseInt(document.getElementById('quantity-select').value);
         const orderMode = document.getElementById('order-select').value;
-        const selectedMode = document.getElementById('game-mode-select').value;
 
-        isSurvivalMode = (selectedMode === 'survival');
         document.getElementById('display-name').innerText = username;
-
-        if (isSurvivalMode) {
-            playerLives = 3;
-            document.getElementById('hearts-container').innerText = "❤️ ❤️ ❤️";
-            document.getElementById('sudden-death-panel').style.display = "flex";
-            document.getElementById('display-mode').innerText = `🔥 SINH TỒN`;
-            document.getElementById('display-mode').style.background = "#ffe4e6";
-            document.getElementById('display-mode').style.color = "#9f1239";
-            
-            audioBGM.currentTime = 0;
-            audioBGM.play().catch(e => console.log("Chờ tương tác để phát nhạc"));
-        } else {
-            document.getElementById('sudden-death-panel').style.display = "none";
-            document.getElementById('display-mode').innerText = `Thường: ${quantity} câu`;
-            document.getElementById('display-mode').style.background = "#e0f2fe";
-            document.getElementById('display-mode').style.color = "#0369a1";
-        }
+        document.getElementById('display-mode').innerText = `Luyện tập tự do`;
+        document.getElementById('display-mode').style.background = "#e0f2fe";
+        document.getElementById('display-mode').style.color = "#0369a1";
 
         let basePool = [...finalFullPool];
         if (orderMode === 'random') {
@@ -432,13 +393,11 @@
         targetTranslation.style.display = isTranslationVisible ? "block" : "none";
     });
 
-    // ==========================================
-    // CẤU HÌNH PHÁT ÂM MẪU CHUYỂN ĐỔI SANG TIẾNG ANH (EN)
-    // ==========================================
+    // CẤU HÌNH PHÁT ÂM MẪU TIẾNG ANH (EN)
     document.getElementById('btn-audio-sample').addEventListener('click', () => {
         const currentItem = activeSessionQueue[currentPointer];
         const utterance = new SpeechSynthesisUtterance(currentItem.text);
-        utterance.lang = 'en-US'; // Chuyển mã ngôn ngữ sang English US
+        utterance.lang = 'en-US';
         
         let allAvailableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.includes('en') || v.lang.includes('EN'));
         const userSelectedMode = document.getElementById('voice-select').value;
@@ -489,7 +448,7 @@
         targetChinese.innerText = item.text;
         targetPinyin.innerText = item.pinyin;
         targetTranslation.innerText = item.translation; 
-        targetExamples.innerText = item.examples; // Trực quan hóa câu ví dụ
+        targetExamples.innerText = item.examples; 
 
         const total = activeSessionQueue.length;
         document.getElementById('progress-indicator').innerText = `${currentPointer + 1} / ${total}`;
@@ -535,7 +494,6 @@
                 localStorage.setItem('ai_vocab_last_date_en', todayStr);
             }
             
-            audioBGM.pause(); 
             alert("🎉 Tuyệt vời! Bạn đã hoàn thành toàn bộ 5 từ vựng trọng điểm Unit 1 lớp 12!");
             location.reload();
         }
@@ -547,14 +505,12 @@
         alert("Trình duyệt không hỗ trợ Web Speech API.");
     } else {
         activeRecognition = new SpeechRecognition();
-        activeRecognition.lang = 'en-US'; // Chuyển đổi mã thu âm sang English US
+        activeRecognition.lang = 'en-US'; 
         activeRecognition.continuous = false; 
         activeRecognition.interimResults = true;
 
         btnMic.addEventListener('click', () => {
             if (!isListening) {
-                if(isSurvivalMode) audioBGM.pause();
-
                 gatheredTranscript = "";
                 liveFallbackBuffer = "";
                 confidenceSum = 0;
@@ -600,7 +556,6 @@
 
         activeRecognition.onend = () => {
             resetMicButtonState();
-            if(isSurvivalMode && playerLives > 0) audioBGM.play().catch(e => {});
 
             let absoluteFinalText = gatheredTranscript.trim() || liveFallbackBuffer.trim();
 
@@ -659,29 +614,6 @@
             sfxFail.currentTime = 0; sfxFail.play().catch(e=>{}); 
         }
 
-        if (isSurvivalMode) {
-            if (finalOverallScore < 70) {
-                playerLives--;
-                document.getElementById('sudden-death-panel').style.animation = 'none';
-                setTimeout(() => { document.getElementById('sudden-death-panel').style.animation = 'shakeDanger 0.5s ease'; }, 10);
-                
-                sfxHurt.currentTime = 0; sfxHurt.play().catch(e=>{}); 
-
-                if (playerLives === 3) document.getElementById('hearts-container').innerText = "❤️ ❤️ ❤️";
-                else if (playerLives === 2) document.getElementById('hearts-container').innerText = "❤️ ❤️ 黑";
-                else if (playerLives === 1) document.getElementById('hearts-container').innerText = "❤️ 黑 黑";
-                else {
-                    document.getElementById('hearts-container').innerText = "黑 黑 黑";
-                    audioBGM.pause(); 
-                    setTimeout(() => {
-                        alert(`☠️ GAME OVER! Điểm câu cuối là ${finalOverallScore}%. Bạn đã hết mạng sinh tồn. Hãy ôn tập lại ở chế độ thường nhé!`);
-                        location.reload();
-                    }, 200);
-                    return;
-                }
-            }
-        }
-
         item.hasScored = true;
         item.savedTranscript = userVoiceText;
         item.savedFinalScore = finalOverallScore;
@@ -692,7 +624,6 @@
         renderReportPanel(finalOverallScore, accuracyScore, fluencyScore, articulationScore, toneScore, completenessScore, userVoiceText);
     }
 
-    // UPDATE CHUẨN HOÁ CHỮ THƯỜNG CHO TIẾNG ANH (XỬ LÝ ĐỒNG BỘ CHỮ HOA/THƯỜNG)
     function cleanString(str) {
         if(!str) return [];
         return str.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？；：（）、「」、“”\s]/g, "").split("");
